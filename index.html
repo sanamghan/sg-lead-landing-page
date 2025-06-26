@@ -34,7 +34,7 @@
             left: 0;
             width: 50%;
             height: 100%;
-            background: url('./background.jpg') center/cover no-repeat;
+            background: url('data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAH0AZADASIAAhEBAxEB/8QAGwABAAIDAQEAAAAAAAAAAAAAAAECAwQFBgf/xAA4EAABBAEDAgQEBQMEAgMAAAABAAIDBAUREiExBhMUQVFhByIycYGRobHB0eHwFSNS8TNiFhcI/8QAGgEBAAMBAQEAAAAAAAAAAAAAAAECAwQFBg==') center/cover no-repeat;
             opacity: 0.15;
             z-index: 1;
         }
@@ -289,15 +289,15 @@
         @media (max-width: 1200px) {
             .hero-section {
                 grid-template-columns: 1fr;
-                grid-template-rows: auto auto;
+                grid-template-rows: 100vh auto;
             }
 
             .hero-bg {
                 width: 100%;
-                height: 60%;
+                height: 100vh;
                 top: 0;
-                opacity: 0.12;
-                background-position: center top;
+                opacity: 0.3;
+                background-position: center center;
             }
 
             .services {
@@ -305,56 +305,81 @@
             }
 
             .left-content {
-                padding: 60px 40px 40px 40px;
+                padding: 0 40px;
                 text-align: center;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                position: relative;
+                z-index: 10;
             }
 
             .right-content {
                 padding: 40px;
+                background: white;
+                min-height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
             }
 
             .business-name {
-                font-size: 64px;
+                font-size: 72px;
                 transform: rotate(0deg);
+                margin-bottom: 16px;
             }
 
             .tagline-main {
-                font-size: 26px;
+                font-size: 36px;
+                margin-bottom: 12px;
             }
 
             .tagline-sub {
-                font-size: 22px;
+                font-size: 32px;
+                margin-bottom: 20px;
+            }
+
+            .services {
+                font-size: 24px;
+            }
+
+            .form-container {
+                width: 100%;
+                max-width: none;
+                margin: 0;
+                border-radius: 0;
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
             }
         }
 
         @media (max-width: 768px) {
-            .hero-section {
-                height: auto;
-                min-height: 100vh;
+            .business-name {
+                font-size: 56px;
+            }
+
+            .tagline-main {
+                font-size: 28px;
+            }
+
+            .tagline-sub {
+                font-size: 24px;
+            }
+
+            .services {
+                font-size: 20px;
             }
 
             .left-content {
-                padding: 40px 30px 30px 30px;
+                padding: 0 30px;
             }
 
             .right-content {
                 padding: 30px;
-            }
-
-            .business-name {
-                font-size: 48px;
-            }
-
-            .tagline-main {
-                font-size: 22px;
-            }
-
-            .tagline-sub {
-                font-size: 18px;
-            }
-
-            .services {
-                font-size: 18px;
             }
 
             .form-container {
@@ -364,7 +389,7 @@
             .circle-1 {
                 width: 120px;
                 height: 120px;
-                top: 5%;
+                top: 15%;
                 left: 60%;
             }
 
@@ -372,20 +397,36 @@
                 border-left: 40px solid transparent;
                 border-right: 40px solid transparent;
                 border-bottom: 70px solid #fdf539;
+                top: 20%;
+                left: 10%;
+            }
+
+            .dots {
+                top: 70%;
+                left: 20%;
+            }
+
+            .squiggle {
+                bottom: 25%;
+                left: 15%;
             }
         }
 
         @media (max-width: 480px) {
             .business-name {
-                font-size: 36px;
+                font-size: 42px;
             }
 
             .tagline-main {
-                font-size: 18px;
+                font-size: 24px;
             }
 
             .tagline-sub {
-                font-size: 16px;
+                font-size: 20px;
+            }
+
+            .services {
+                font-size: 18px;
             }
 
             .form-container h2 {
@@ -393,11 +434,15 @@
             }
 
             .left-content {
-                padding: 30px 20px 20px 20px;
+                padding: 0 20px;
             }
 
             .right-content {
                 padding: 20px;
+            }
+
+            .form-container {
+                padding: 30px 20px;
             }
         }
     </style>
@@ -422,7 +467,7 @@
         <div class="left-content">
             <h1 class="business-name">SG Lead CO</h1>
             <p class="tagline-main">Built. Scaled. Sold.</p>
-            <p class="tagline-sub">Now I help others grow smarter</p>
+            <p class="tagline-sub">Now I help others grow smarter.</p>
             <p class="services">Growth Strategy • Paid Media • Scalable Systems</p>
         </div>
         
