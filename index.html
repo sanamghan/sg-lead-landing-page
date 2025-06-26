@@ -525,23 +525,5 @@
             </div>
         </div>
     </div>
-
-    <script>
-        document.getElementById('leadForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const message = document.getElementById('message').value;
-            
-            if (!name || !email) {
-                alert('Please fill in your name and email.');
-                return;
-            }
-            
-            alert('Thank you for your interest! We\'ll be in touch soon.');
-            this.reset();
-        });
-    </script>
 </body>
 </html>
