@@ -301,7 +301,10 @@
 
             .services {
                 white-space: normal;
-                font-size: 16px;
+                font-size: 18px;
+                font-weight: 500;
+                text-transform: uppercase;
+                letter-spacing: 2px;
             }
 
             .left-content {
@@ -329,16 +332,32 @@
             }
 
             .business-name {
-                font-size: 64px;
-                transform: rotate(0deg);
+                font-size: 62px;
+                position: absolute;
+                top: 15%;
+                left: 50%;
+                transform: translateX(-50%);
+                margin: 0;
+                padding: 0;
+                white-space: nowrap;
+            }
+
+            .tagline-group {
+                position: absolute;
+                bottom: 15%;
+                left: 50%;
+                transform: translateX(-50%);
+                margin: 0;
             }
 
             .tagline-main {
-                font-size: 26px;
+                font-size: 44px;
+                font-weight: 700;
             }
 
             .tagline-sub {
-                font-size: 22px;
+                font-size: 40px;
+                font-weight: 600;
             }
 
             .form-container {
@@ -378,29 +397,26 @@
             }
 
             .tagline-main {
-                font-size: 30px;
+                font-size: 26px;
+                font-weight: 700;
             }
 
             .tagline-sub {
-                font-size: 26px;
+                font-size: 22px;
+                font-weight: 600;
+            }
+
+            .services {
+                font-size: 16px;
+                font-weight: 500;
+                white-space: nowrap;
+                text-transform: uppercase;
+                letter-spacing: 1px;
             }
 
             .right-content {
                 padding: 30px;
                 height: 100vh;
-            }
-
-            .tagline-main {
-                font-size: 22px;
-            }
-
-            .tagline-sub {
-                font-size: 18px;
-            }
-
-            .services {
-                font-size: 14px;
-                white-space: nowrap;
             }
 
             .form-container {
@@ -446,22 +462,27 @@
                 margin: 0;
             }
 
-            .right-content {
-                padding: 20px;
-                height: 100vh;
-            }
-
             .tagline-main {
-                font-size: 18px;
+                font-size: 22px;
+                font-weight: 700;
             }
 
             .tagline-sub {
-                font-size: 16px;
+                font-size: 20px;
+                font-weight: 600;
             }
 
             .services {
-                font-size: 12px;
+                font-size: 14px;
+                font-weight: 500;
                 white-space: nowrap;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+            }
+
+            .right-content {
+                padding: 20px;
+                height: 100vh;
             }
 
             .form-container h2 {
@@ -504,7 +525,7 @@
                 <h2>Let's Connect</h2>
                 <p class="form-subtitle">Ready to scale your business? Let's start the conversation.</p>
                 
-<form id="leadForm" action="https://formspree.io/f/mdkzpqvl" method="POST">
+                <form id="leadForm" action="https://formspree.io/f/mdkzpqvl" method="POST">
                     <div class="form-group">
                         <label for="name">Name</label>
                         <input type="text" id="name" name="name" required>
