@@ -1,4 +1,5 @@
-<!DOCTYPE html>
+/* Background Image */
+<parameter name="old_str">        /* Background Image */<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -309,11 +310,12 @@
                 text-align: center;
                 display: flex;
                 flex-direction: column;
-                justify-content: center;
+                justify-content: flex-end;
                 align-items: center;
                 height: 100vh;
                 position: relative;
                 z-index: 10;
+                padding-bottom: 120px;
             }
 
             .right-content {
@@ -376,14 +378,17 @@
 
             .left-content {
                 padding: 0 30px;
+                padding-bottom: 100px;
             }
 
             .right-content {
-                padding: 30px;
+                padding: 40px 30px;
             }
 
             .form-container {
-                padding: 40px 30px;
+                padding: 50px 30px;
+                max-width: none;
+                width: 100%;
             }
 
             .circle-1 {
@@ -435,14 +440,15 @@
 
             .left-content {
                 padding: 0 20px;
+                padding-bottom: 80px;
             }
 
             .right-content {
-                padding: 20px;
+                padding: 30px 20px;
             }
 
             .form-container {
-                padding: 30px 20px;
+                padding: 40px 20px;
             }
         }
     </style>
