@@ -1,5 +1,4 @@
-/* Background Image */
-<parameter name="old_str">        /* Background Image */<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -28,19 +27,17 @@
             overflow: hidden;
         }
 
-        /* Background Image */
         .hero-bg {
             position: absolute;
             top: 0;
             left: 0;
             width: 50%;
             height: 100%;
-            background: url('data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAH0AZADASIAAhEBAxEB/8QAGwABAAIDAQEAAAAAAAAAAAAAAAECAwQFBgf/xAA4EAABBAEDAgQEBQMEAgMAAAABAAIDBAUREiExBhMUQVFhByIycYGRobHB0eHwFSNS8TNiFhcI/8QAGgEBAAMBAQEAAAAAAAAAAAAAAAECAwQFBg==') center/cover no-repeat;
-            opacity: 0.15;
+            background: url('./background.jpg') center/cover no-repeat;
+            opacity: 0.4;
             z-index: 1;
         }
 
-        /* Fun Visual Elements */
         .visual-element {
             position: absolute;
             z-index: 2;
@@ -116,7 +113,6 @@
             animation: wiggle 4s ease-in-out infinite;
         }
 
-        /* Left Content Section */
         .left-content {
             display: flex;
             flex-direction: column;
@@ -165,11 +161,6 @@
             white-space: nowrap;
         }
 
-        .cta-button {
-            display: none;
-        }
-
-        /* Right Content Section */
         .right-content {
             display: flex;
             align-items: center;
@@ -264,7 +255,6 @@
             box-shadow: 0 8px 25px rgba(253, 245, 57, 0.4);
         }
 
-        /* Animations */
         @keyframes float {
             0%, 100% { transform: translateY(0px); }
             50% { transform: translateY(-20px); }
@@ -286,19 +276,18 @@
             75% { transform: rotate(40deg); }
         }
 
-        /* Mobile Responsiveness */
         @media (max-width: 1200px) {
             .hero-section {
                 grid-template-columns: 1fr;
-                grid-template-rows: 100vh auto;
+                grid-template-rows: auto auto;
             }
 
             .hero-bg {
                 width: 100%;
-                height: 100vh;
+                height: 60%;
                 top: 0;
                 opacity: 0.3;
-                background-position: center center;
+                background-position: center top;
             }
 
             .services {
@@ -306,95 +295,69 @@
             }
 
             .left-content {
-                padding: 0 40px;
+                padding: 60px 40px 40px 40px;
                 text-align: center;
-                display: flex;
-                flex-direction: column;
                 justify-content: flex-end;
-                align-items: center;
-                height: 100vh;
-                position: relative;
-                z-index: 10;
-                padding-bottom: 120px;
+                height: 60vh;
+                padding-bottom: 80px;
             }
 
             .right-content {
                 padding: 40px;
-                background: white;
-                min-height: 100vh;
-                display: flex;
-                align-items: center;
-                justify-content: center;
             }
 
             .business-name {
-                font-size: 72px;
+                font-size: 64px;
                 transform: rotate(0deg);
-                margin-bottom: 16px;
             }
 
             .tagline-main {
-                font-size: 36px;
-                margin-bottom: 12px;
+                font-size: 26px;
             }
 
             .tagline-sub {
-                font-size: 32px;
-                margin-bottom: 20px;
-            }
-
-            .services {
-                font-size: 24px;
-            }
-
-            .form-container {
-                width: 100%;
-                max-width: none;
-                margin: 0;
-                border-radius: 0;
-                min-height: 100vh;
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
+                font-size: 22px;
             }
         }
 
         @media (max-width: 768px) {
-            .business-name {
-                font-size: 56px;
-            }
-
-            .tagline-main {
-                font-size: 28px;
-            }
-
-            .tagline-sub {
-                font-size: 24px;
-            }
-
-            .services {
-                font-size: 20px;
+            .hero-section {
+                height: auto;
+                min-height: 100vh;
             }
 
             .left-content {
-                padding: 0 30px;
-                padding-bottom: 100px;
+                padding: 40px 30px 30px 30px;
             }
 
             .right-content {
-                padding: 40px 30px;
+                padding: 30px;
+            }
+
+            .business-name {
+                font-size: 48px;
+            }
+
+            .tagline-main {
+                font-size: 22px;
+            }
+
+            .tagline-sub {
+                font-size: 18px;
+            }
+
+            .services {
+                font-size: 18px;
             }
 
             .form-container {
-                padding: 50px 30px;
-                max-width: none;
-                width: 100%;
+                padding: 40px 30px;
             }
 
             .circle-1 {
                 width: 120px;
                 height: 120px;
-                top: 15%;
+                top: 5%;
                 left: 60%;
             }
 
@@ -402,36 +365,20 @@
                 border-left: 40px solid transparent;
                 border-right: 40px solid transparent;
                 border-bottom: 70px solid #fdf539;
-                top: 20%;
-                left: 10%;
-            }
-
-            .dots {
-                top: 70%;
-                left: 20%;
-            }
-
-            .squiggle {
-                bottom: 25%;
-                left: 15%;
             }
         }
 
         @media (max-width: 480px) {
             .business-name {
-                font-size: 42px;
+                font-size: 36px;
             }
 
             .tagline-main {
-                font-size: 24px;
+                font-size: 18px;
             }
 
             .tagline-sub {
-                font-size: 20px;
-            }
-
-            .services {
-                font-size: 18px;
+                font-size: 16px;
             }
 
             .form-container h2 {
@@ -439,16 +386,11 @@
             }
 
             .left-content {
-                padding: 0 20px;
-                padding-bottom: 80px;
+                padding: 30px 20px 20px 20px;
             }
 
             .right-content {
-                padding: 30px 20px;
-            }
-
-            .form-container {
-                padding: 40px 20px;
+                padding: 20px;
             }
         }
     </style>
@@ -457,7 +399,6 @@
     <div class="hero-section">
         <div class="hero-bg"></div>
         
-        <!-- Fun Visual Elements -->
         <div class="visual-element circle-1"></div>
         <div class="visual-element circle-2"></div>
         <div class="visual-element triangle"></div>
@@ -508,31 +449,17 @@
         document.getElementById('leadForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
-            // Get form data
             const name = document.getElementById('name').value;
             const email = document.getElementById('email').value;
             const message = document.getElementById('message').value;
             
-            // Simple validation
             if (!name || !email) {
                 alert('Please fill in your name and email.');
                 return;
             }
             
-            // Here you would typically send the data to your backend
-            // For now, we'll just show a success message
             alert('Thank you for your interest! We\'ll be in touch soon.');
-            
-            // Reset form
             this.reset();
-        });
-
-        // Smooth scroll for CTA button
-        document.querySelector('.cta-button').addEventListener('click', function(e) {
-            e.preventDefault();
-            document.querySelector('#form').scrollIntoView({
-                behavior: 'smooth'
-            });
         });
     </script>
 </body>
