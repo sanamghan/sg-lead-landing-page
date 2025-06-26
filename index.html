@@ -125,10 +125,10 @@
 
         .business-name {
             font-family: 'Poppins', sans-serif;
-            font-size: 164px;
+            font-size: 200px;
             font-weight: 800;
             color: #333;
-            margin-bottom: 24px;
+            margin-bottom: 12px;
             letter-spacing: -4px;
             line-height: 0.85;
             text-shadow: 6px 6px 0px #fdf539;
@@ -136,7 +136,7 @@
 
         .tagline-main {
             font-size: 64px;
-            margin-bottom: 16px;
+            margin-bottom: 8px;
             font-weight: 600;
             color: #555;
             max-width: 800px;
@@ -145,7 +145,7 @@
 
         .tagline-sub {
             font-size: 56px;
-            margin-bottom: 36px;
+            margin-bottom: 18px;
             font-weight: 500;
             color: #666;
             max-width: 800px;
@@ -281,6 +281,7 @@
             .hero-section {
                 grid-template-columns: 1fr;
                 grid-template-rows: 100vh 100vh;
+                height: 200vh;
             }
 
             .hero-bg {
@@ -316,6 +317,8 @@
                 display: flex;
                 align-items: center;
                 justify-content: center;
+                position: relative;
+                z-index: 10;
             }
 
             .business-name {
@@ -329,6 +332,16 @@
 
             .tagline-sub {
                 font-size: 22px;
+            }
+
+            .form-container {
+                background: #f4edd2;
+                padding: 60px 40px;
+                border-radius: 25px;
+                border: 2px solid #999;
+                box-shadow: 0 25px 70px rgba(0, 0, 0, 0.15);
+                width: 100%;
+                max-width: 500px;
             }
         }
 
