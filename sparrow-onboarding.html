@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SG Lead CO - Client Onboarding</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #495057;
+        }
+        
+        .floating-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+        
+        .float-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(255, 235, 59, 0.08), rgba(169, 169, 169, 0.05));
+            animation: float 20s infinite ease-in-out;
+        }
+        
+        .float-circle:nth-child(1) {
+            width: 120px;
+            height: 120px;
+            top: 10%;
+            left: 80%;
+            animation-delay: 0s;
+        }
+        
+        .float-circle:nth-child(2) {
+            width: 80px;
+            height: 80px;
+            top: 60%;
+            left: 5%;
+            animation-delay: 7s;
+        }
+        
+        .float-circle:nth-child(3) {
+            width: 60px;
+            height: 60px;
+            top: 30%;
+            left: 10%;
+            animation-delay: 14s;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            33% { transform: translateY(-30px) rotate(120deg); }
+            66% { transform: translateY(20px) rotate(240deg); }
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 24px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.08);
+            overflow: hidden;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+            color: white;
+            padding: 60px 50px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #ffeb3b, #fdd835);
+        }
+        
+        .header::after {
+            content: '';
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, rgba(255, 235, 59, 0.15), rgba(169, 169, 169, 0.08));
+            border-radius: 50%;
+            animation: pulse 4s infinite ease-in-out;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.7; }
+            50% { transform: scale(1.1); opacity: 0.3; }
+        }
+        
+        .logo-section {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            width: 100%;
+        }
+        
+        .sg-logo {
+            background: white;
+            padding: 15px 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+        
+        .sg-logo:hover {
+            transform: translateY(-2px);
+        }
+        
+        .logo-dots {
+            display: flex;
+            margin-right: 8px;
+        }
+        
+        .dot {
+            width: 12px;
+            height: 12px;
+            background: #ffeb3b;
+            border-radius: 50%;
+            margin-right: 4px;
+            animation: blink 2s infinite ease-in-out;
+        }
+        
+        .dot:nth-child(2) {
+            animation-delay: 0.3s;
+        }
+        
+        .logo-text {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #495057;
+            letter-spacing: -0.5px;
+        }
+        
+        .logo-bubble {
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-top: 12px solid #ffeb3b;
+            margin-left: 8px;
+            transform: rotate(90deg);
+        }
+        
+        .sparrow-logo {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            text-align: center;
+        }
+        
+        .sparrow-logo:hover {
+            transform: translateY(-2px);
+        }
+        
+        .bird-icon {
+            font-size: 1.8rem;
+            color: #495057;
+            margin-bottom: 5px;
+        }
+        
+        .sparrow-text {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #495057;
+            line-height: 1.2;
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+        
+        .header-title {
+            font-size: 2.2rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: white;
+        }
+        
+        .header-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.85;
+            font-weight: 400;
+        }
+        
+        .client-banner {
+            background: linear-gradient(135deg, #ffeb3b 0%, #fdd835 100%);
+            color: #495057;
+            padding: 25px 50px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .client-banner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            animation: shimmer 3s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        
+        .client-name {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .client-subtitle {
+            font-size: 1rem;
+            font-weight: 500;
+            opacity: 0.8;
+        }
+        
+        .content {
+            padding: 60px 50px;
+        }
+        
+        .section {
+            margin-bottom: 60px;
+            opacity: 0;
+            animation: slideInUp 0.8s ease-out forwards;
+        }
+        
+        .section:nth-child(2) { animation-delay: 0.1s; }
+        .section:nth-child(3) { animation-delay: 0.2s; }
+        
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .section-title {
+            font-size: 1.9rem;
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 35px;
+            position: relative;
+            padding-bottom: 12px;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(90deg, #ffeb3b, #fdd835);
+            border-radius: 2px;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(90deg, #ffeb3b, #fdd835);
+            border-radius: 2px;
+        }
+        
+        .cards-grid {
+            display: grid;
+            gap: 25px;
+        }
+        
+        .card {
+            background: white;
+            border: 1px solid rgba(255, 235, 59, 0.2);
+            border-radius: 16px;
+            padding: 30px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(135deg, #ffeb3b, #fdd835);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover::before {
+            transform: scaleY(1);
+        }
+        
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            border-color: rgba(255, 235, 59, 0.4);
+        }
+        
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .card-icon {
+            width: 10px;
+            height: 10px;
+            background: linear-gradient(45deg, #ffeb3b, #fdd835);
+            border-radius: 50%;
+            margin-right: 12px;
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover .card-icon {
+            transform: scale(1.3);
+        }
+        
+        .detail-item {
+            padding: 15px 0;
+            border-bottom: 1px solid #ecf0f1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+        
+        .detail-item:last-child {
+            border-bottom: none;
+        }
+        
+        .detail-item:hover {
+            background: rgba(255, 235, 59, 0.05);
+            margin: 0 -15px;
+            padding-left: 15px;
+            padding-right: 15px;
+            border-radius: 8px;
+        }
+        
+        .detail-label {
+            font-weight: 500;
+            color: #6c757d;
+        }
+        
+        .detail-value {
+            font-weight: 400;
+            color: #868e96;
+        }
+        
+        .highlight-price {
+            background: linear-gradient(135deg, #ffeb3b, #fdd835);
+            color: #495057;
+            padding: 8px 16px;
+            border-radius: 25px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 12px rgba(255, 235, 59, 0.3);
+            animation: priceGlow 3s infinite ease-in-out;
+        }
+        
+        @keyframes priceGlow {
+            0%, 100% { box-shadow: 0 4px 12px rgba(255, 235, 59, 0.3); }
+            50% { box-shadow: 0 6px 20px rgba(255, 235, 59, 0.5); }
+        }
+        
+        .ai-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 25px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .ai-card {
+            background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+            color: #ffeb3b;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .ai-card:nth-child(5) {
+            grid-column: 1 / -1;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+        
+        .ai-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 235, 59, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .ai-card:hover::before {
+            left: 100%;
+        }
+        
+        .ai-card:hover {
+            transform: translateY(-4px) scale(1.02);
+            border-color: #ffeb3b;
+            box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+        }
+        
+        .timeline-container {
+            margin-top: 30px;
+        }
+        
+        .timeline-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .timeline-week {
+            background: white;
+            border: 2px solid #ecf0f1;
+            border-radius: 16px;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .timeline-week::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #ffeb3b, #fdd835);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1;
+        }
+        
+        .timeline-week:hover::before {
+            opacity: 1;
+        }
+        
+        .timeline-week:hover {
+            transform: translateY(-6px);
+            border-color: #ffeb3b;
+        }
+        
+        .timeline-week:hover .week-content {
+            color: #495057;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .week-number {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #ffeb3b;
+        }
+        
+        .week-task {
+            font-weight: 500;
+            color: #6c757d;
+            transition: color 0.3s ease;
+        }
+        
+        .interactive-tooltip {
+            position: relative;
+            cursor: help;
+        }
+        
+        .interactive-tooltip:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #495057;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 20px;
+            }
+            
+            .header, .content {
+                padding: 40px 30px;
+            }
+            
+            .client-banner {
+                padding: 20px 30px;
+            }
+            
+            .header-title {
+                font-size: 1.8rem;
+            }
+            
+            .timeline-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .ai-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-elements">
+        <div class="float-circle"></div>
+        <div class="float-circle"></div>
+        <div class="float-circle"></div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <div class="logo-section">
+                <div class="logo">
+                    <div class="logo-text">
+                        <span class="yellow-dot"></span>
+                        <span class="yellow-dot"></span>
+                        SG Lead CO
+                    </div>
+                </div>
+            </div>
+            <h1 class="header-title">Client Onboarding & Partnership Details</h1>
+        </div>
+        
+        <div class="client-banner">
+            <div class="client-name">SPARROW LAW GROUP LLP</div>
+        </div>
+        
+        <div class="content">
+            <div class="section">
+                <h2 class="section-title">Investment & Partnership Structure</h2>
+                <div class="cards-grid">
+                    <div class="card">
+                        <h3 class="card-title">
+                            <span class="card-icon"></span>
+                            Monthly Investment
+                        </h3>
+                        <div class="detail-item">
+                            <span class="detail-label">Investment Amount</span>
+                            <span class="highlight-price">$6,000</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Payment Terms</span>
+                            <span class="detail-value">Net 15 days</span>
+                        </div>
+                    <div class="detail-item">
+                        <span class="detail-label">July Invoice</span>
+                        <span class="detail-value"><a href="https://drive.google.com/file/d/1olVfYlmYwEW35qAHuB8mte-aD2BUGAoi/view?usp=sharing" target="_blank" style="color: #ffeb3b; text-decoration: underline; font-weight: 600;">Link</a></span>
+                    </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h3 class="card-title">
+                            <span class="card-icon"></span>
+                            Partnership Timeline
+                        </h3>
+                        <div class="detail-item">
+                            <span class="detail-label">Initial Commitment</span>
+                            <span class="detail-value">July 1 - July 31</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Google Ads Sprint</span>
+                            <span class="detail-value">1-2 months estimated</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Monthly Review</span>
+                            <span class="detail-value">Partnership evaluation by 21st</span>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h3 class="card-title">
+                            <span class="card-icon"></span>
+                            Communication Schedule
+                        </h3>
+                        <div class="detail-item">
+                            <span class="detail-label">Meeting Time</span>
+                            <span class="detail-value">Proposing Tuesdays, 10:30am PT</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Duration</span>
+                            <span class="detail-value">30 minutes</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Frequency</span>
+                            <span class="detail-value">Weekly (Month 1) → Bi-weekly</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Additional Add-On Opportunities</h2>
+                <div class="card">
+                    <h3 class="card-title">
+                        <span class="card-icon"></span>
+                        Enhanced Client Experience Through Technology
+                    </h3>
+                    <div class="ai-grid">
+                        <div class="ai-card">
+                            <div>AI Responsive Intake Form</div>
+                        </div>
+                        <div class="ai-card">
+                            <div>Auto Responder Email & SMS</div>
+                        </div>
+                        <div class="ai-card">
+                            <div>Custom Clio Trigger Actions</div>
+                        </div>
+                        <div class="ai-card">
+                            <div>Client Status Update Bot</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title">Google Ads Strategy & Implementation</h2>
+                <div class="cards-grid">
+                    <div class="card">
+                        <h3 class="card-title">
+                            <span class="card-icon"></span>
+                            Foundation Setup
+                        </h3>
+                        <div class="detail-item">
+                            <span class="detail-label">Ad Copy Development</span>
+                            <span class="detail-value">Sparrow Review & optimization</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Search Terms Analysis</span>
+                            <span class="detail-value">Comprehensive performance report</span>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h3 class="card-title">
+                            <span class="card-icon"></span>
+                            Strategic Objectives
+                        </h3>
+                        <div class="detail-item">
+                            <span class="detail-label">Performance Tracking</span>
+                            <span class="detail-value interactive-tooltip" data-tooltip="Track keyword, campaign & network performance">Clio integration setup</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Campaign Testing</span>
+                            <span class="detail-value">Multiple match type optimization</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Scalability Focus</span>
+                            <span class="detail-value">Profitable growth preparation</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="timeline-container">
+                    <h3 class="card-title">
+                        <span class="card-icon"></span>
+                        4-Week Implementation Roadmap
+                    </h3>
+                    <div class="timeline-grid">
+                        <div class="timeline-week">
+                            <div class="week-content">
+                                <div class="week-number">Week 1</div>
+                                <div class="week-task">Tracking Setup</div>
+                            </div>
+                        </div>
+                        <div class="timeline-week">
+                            <div class="week-content">
+                                <div class="week-number">Week 2</div>
+                                <div class="week-task">Systems Integration</div>
+                            </div>
+                        </div>
+                        <div class="timeline-week">
+                            <div class="week-content">
+                                <div class="week-number">Week 3</div>
+                                <div class="week-task">Ad Copy + Keywords</div>
+                            </div>
+                        </div>
+                        <div class="timeline-week">
+                            <div class="week-content">
+                                <div class="week-number">Week 4</div>
+                                <div class="week-task">Monitor + Optimize</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
