@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Ads Lead URL Decoder</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .input-section {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .results {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #e8f5e8;
+            border-radius: 5px;
+            border-left: 4px solid #4CAF50;
+            display: none;
+        }
+        .result-item {
+            margin-bottom: 10px;
+            padding: 8px;
+            background: white;
+            border-radius: 3px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .copy-btn {
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .copy-btn:hover {
+            background-color: #1976D2;
+        }
+        .reference {
+            margin-top: 30px;
+            padding: 15px;
+            background-color: #fff3cd;
+            border-radius: 5px;
+            border-left: 4px solid #ffc107;
+        }
+        .reference h3 {
+            margin-top: 0;
+            color: #856404;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Google Ads Lead URL Decoder</h1>
+        
+        <div class="input-section">
+            <label for="urlInput">Paste the lead's referral URL here:</label>
+            <input type="text" id="urlInput" placeholder="https://sparrowllp.com/?campaign=21251904842&keyword=personal+injury+lawyer&matchtype=exact">
+            <button onclick="decodeURL()">Decode URL</button>
+        </div>
+
+        <div id="results" class="results">
+            <h3>📊 Decoded Lead Information:</h3>
+            <div id="resultContent"></div>
+        </div>
+
+        <div class="reference">
+            <h3>📝 Quick Reference:</h3>
+            <p><strong>Campaign ID 21251904842</strong> = Search Campaign</p>
+            <p><strong>Campaign ID 21826252044</strong> = Performance Max Campaign</p>
+        </div>
+    </div>
+
+    <script>
+        function decodeURL() {
+            const urlInput = document.getElementById('urlInput').value.trim();
+            const resultsDiv = document.getElementById('results');
+            const resultContent = document.getElementById('resultContent');
+            
+            if (!urlInput) {
+                alert('Please paste a URL first!');
+                return;
+            }
+
+            try {
+                const url = new URL(urlInput);
+                const params = new URLSearchParams(url.search);
+                
+                let decodedInfo = [];
+                
+                // Campaign Type
+                const campaignId = params.get('campaign') || params.get('gad_campaignid');
+                if (campaignId) {
+                    let campaignType = 'Unknown Campaign';
+                    if (campaignId === '21251904842') {
+                        campaignType = 'Search Campaign';
+                    } else if (campaignId === '21826252044') {
+                        campaignType = 'Performance Max Campaign';
+                    }
+                    decodedInfo.push({
+                        label: 'Campaign Type',
+                        value: campaignType
+                    });
+                    decodedInfo.push({
+                        label: 'Campaign ID',
+                        value: campaignId
+                    });
+                }
+                
+                // Keyword (Search only)
+                const keyword = params.get('keyword') || params.get('utm_term');
+                if (keyword) {
+                    decodedInfo.push({
+                        label: 'Keyword',
+                        value: decodeURIComponent(keyword).replace(/\+/g, ' ')
+                    });
+                }
+                
+                // Match Type (Search only)
+                const matchType = params.get('matchtype');
+                if (matchType) {
+                    decodedInfo.push({
+                        label: 'Match Type',
+                        value: matchType
+                    });
+                }
+                
+                // Ad Group
+                const adGroup = params.get('adgroup');
+                if (adGroup) {
+                    decodedInfo.push({
+                        label: 'Ad Group ID',
+                        value: adGroup
+                    });
+                }
+                
+                // Source (Performance Max)
+                const source = params.get('source');
+                if (source === 'pmax') {
+                    decodedInfo.push({
+                        label: 'Source',
+                        value: 'Performance Max'
+                    });
+                }
+                
+                // Placement (Performance Max)
+                const placement = params.get('placement');
+                if (placement) {
+                    decodedInfo.push({
+                        label: 'Placement',
+                        value: placement
+                    });
+                }
+                
+                if (decodedInfo.length === 0) {
+                    resultContent.innerHTML = '<p>No Google Ads tracking parameters found in this URL.</p>';
+                } else {
+                    let html = '';
+                    decodedInfo.forEach(item => {
+                        html += `
+                            <div class="result-item">
+                                <span><strong>${item.label}:</strong> ${item.value}</span>
+                                <button class="copy-btn" onclick="copyToClipboard('${item.value}')">Copy</button>
+                            </div>
+                        `;
+                    });
+                    
+                    // Add a "Copy All" option
+                    const allText = decodedInfo.map(item => `${item.label}: ${item.value}`).join('\n');
+                    html += `
+                        <div class="result-item" style="background-color: #f0f0f0; margin-top: 15px;">
+                            <span><strong>Copy all info for Clio:</strong></span>
+                            <button class="copy-btn" onclick="copyToClipboard(\`${allText}\`)">Copy All</button>
+                        </div>
+                    `;
+                    
+                    resultContent.innerHTML = html;
+                }
+                
+                resultsDiv.style.display = 'block';
+                
+            } catch (error) {
+                alert('Invalid URL format. Please check the URL and try again.');
+            }
+        }
+        
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(function() {
+                // Visual feedback
+                event.target.textContent = 'Copied!';
+                event.target.style.backgroundColor = '#28a745';
+                setTimeout(() => {
+                    event.target.textContent = 'Copy';
+                    event.target.style.backgroundColor = '#2196F3';
+                }, 1000);
+            }).catch(function(err) {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                
+                event.target.textContent = 'Copied!';
+                setTimeout(() => {
+                    event.target.textContent = 'Copy';
+                }, 1000);
+            });
+        }
+        
+        // Allow Enter key to trigger decode
+        document.getElementById('urlInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                decodeURL();
+            }
+        });
+        
+        // Auto-focus on input
+        document.getElementById('urlInput').focus();
+    </script>
+</body>
+</html>
