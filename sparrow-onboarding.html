@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SG Lead CO - Client Onboarding</title>
+    <link rel="icon" type="image/png" href="favicon.png">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
         
@@ -527,6 +528,20 @@
             font-weight: 700;
             margin-bottom: 12px;
             color: #ffeb3b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .week-completed {
+            color: #28a745;
+        }
+        
+        .checkmark {
+            color: #28a745;
+            font-size: 1.2rem;
+            font-weight: 700;
         }
         
         .week-task {
@@ -787,7 +802,9 @@
                     <div class="timeline-grid">
                         <div class="timeline-week">
                             <div class="week-content">
-                                <div class="week-number">Week 1</div>
+                                <div class="week-number week-completed">
+                                    Week 1 <span class="checkmark">✓</span>
+                                </div>
                                 <div class="week-task">Tracking Setup</div>
                             </div>
                         </div>
