@@ -1,385 +1,192 @@
-import React, { useState, useMemo, useEffect } from 'react';
-import { Search, Download, Upload, Filter, RotateCcw } from 'lucide-react';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Ads Search Term Manager</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body>
+    <div id="root"></div>
 
-const SearchTermManager = () => {
-  const [searchTerms, setSearchTerms] = useState([]);
-  const [loading, setLoading] = useState(true);
+    <script type="text/babel">
+        const { useState, useMemo, useEffect } = React;
+        const { Search, Download, RotateCcw } = lucide;
 
-  // Load the actual search terms data
-  useEffect(() => {
-    // Your complete dataset with all 129 terms
-    const actualSearchTerms = [
-      { id: 1, term: 'workplace lawyers no win no fee near me', impressions: 36, clicks: 18, conversions: 0, action: 'none' },
-      { id: 2, term: 'wrongful termination california', impressions: 160, clicks: 3, conversions: 5, action: 'none' },
-      { id: 3, term: 'litigation attorneys', impressions: 29, clicks: 5, conversions: 0, action: 'none' },
-      { id: 4, term: 'law office', impressions: 1635, clicks: 226, conversions: 3, action: 'none' },
-      { id: 5, term: 'lawyer law', impressions: 75, clicks: 13, conversions: 0, action: 'none' },
-      { id: 6, term: 'litigation lawyers', impressions: 45, clicks: 11, conversions: 0, action: 'none' },
-      { id: 7, term: 'houston workers comp attorney', impressions: 38, clicks: 8, conversions: 0, action: 'none' },
-      { id: 8, term: 'professional solicitors', impressions: 9, clicks: 4, conversions: 0, action: 'none' },
-      { id: 9, term: 'harassment at work', impressions: 31, clicks: 4, conversions: 0, action: 'none' },
-      { id: 10, term: 'defamation lawyer', impressions: 26, clicks: 3, conversions: 2, action: 'none' },
-      { id: 11, term: 'lawsuit lawyer', impressions: 29, clicks: 4, conversions: 0, action: 'none' },
-      { id: 12, term: 'lawsuit lawyer', impressions: 21, clicks: 3, conversions: 0, action: 'none' },
-      { id: 13, term: 'law office', impressions: 42, clicks: 7, conversions: 0, action: 'none' },
-      { id: 14, term: 'employment lawyer sacramento', impressions: 55, clicks: 5, conversions: 1, action: 'none' },
-      { id: 15, term: 'longshore attorney', impressions: 9, clicks: 4, conversions: 0, action: 'none' },
-      { id: 16, term: 'workers compensation lawyers westchester county ny', impressions: 123, clicks: 11, conversions: 0, action: 'none' },
-      { id: 17, term: 'california lawyer', impressions: 34, clicks: 4, conversions: 0, action: 'none' },
-      { id: 18, term: 'claims lawyers nearby', impressions: 111, clicks: 13, conversions: 0, action: 'none' },
-      { id: 19, term: 'free workers comp advice', impressions: 119, clicks: 20, conversions: 0, action: 'none' },
-      { id: 20, term: 'best work injury attorney near me', impressions: 27, clicks: 5, conversions: 0, action: 'none' },
-      { id: 21, term: 'defamation of character lawyers no win no fee california', impressions: 10, clicks: 3, conversions: 0, action: 'none' },
-      { id: 22, term: 'longshore attorney', impressions: 16, clicks: 3, conversions: 0, action: 'none' },
-      { id: 23, term: 'workers comp attorney in houston texas', impressions: 21, clicks: 5, conversions: 1, action: 'none' },
-      { id: 24, term: 'lawyer no win no fee', impressions: 23, clicks: 3, conversions: 3, action: 'none' },
-      { id: 25, term: 'wrongful foreclosure attorney california', impressions: 9, clicks: 3, conversions: 0, action: 'none' },
-      { id: 26, term: 'legal lawyer nearby', impressions: 10, clicks: 3, conversions: 0, action: 'none' },
-      { id: 27, term: 'legal lawyer attorney', impressions: 33, clicks: 3, conversions: 0, action: 'none' },
-      { id: 28, term: 'how to press charges for harassment', impressions: 9, clicks: 3, conversions: 1, action: 'none' },
-      { id: 29, term: 'worker compensation lawyer', impressions: 231, clicks: 17, conversions: 1, action: 'none' },
-      { id: 30, term: 'unfair employment practices at my workplace', impressions: 4, clicks: 3, conversions: 4, action: 'none' },
-      { id: 31, term: 'top business law firms', impressions: 50, clicks: 3, conversions: 0, action: 'none' },
-      { id: 32, term: 'lawyer for compensation', impressions: 93, clicks: 18, conversions: 3, action: 'none' },
-      { id: 33, term: 'employment law lawyers', impressions: 23, clicks: 4, conversions: 0, action: 'none' },
-      { id: 34, term: 'lawyers specializing in labor laws', impressions: 27, clicks: 4, conversions: 0, action: 'none' },
-      { id: 35, term: 'whistleblower lawyers near me', impressions: 15, clicks: 3, conversions: 2, action: 'none' },
-      { id: 36, term: 'hostile work environment california', impressions: 45, clicks: 4, conversions: 0, action: 'none' },
-      { id: 37, term: 'no win no fee lawyers', impressions: 51, clicks: 4, conversions: 0, action: 'none' },
-      { id: 38, term: 'legal lawyer attorney', impressions: 313, clicks: 37, conversions: 1, action: 'none' },
-      { id: 39, term: 'attorney outsourcing support services', impressions: 12, clicks: 3, conversions: 0, action: 'none' },
-      { id: 40, term: 'legalzoom attorney referral service', impressions: 24, clicks: 3, conversions: 0, action: 'none' },
-      { id: 41, term: 'lawyer no win no fee', impressions: 260, clicks: 41, conversions: 8, action: 'none' },
-      { id: 42, term: 'attorney llc', impressions: 23, clicks: 4, conversions: 0, action: 'none' },
-      { id: 43, term: 'retaliation in the workplace', impressions: 60, clicks: 7, conversions: 0, action: 'none' },
-      { id: 44, term: 'lawyers that don t get paid unless you win near me', impressions: 80, clicks: 7, conversions: 1, action: 'none' },
-      { id: 45, term: 'fernando vargas attorney', impressions: 63, clicks: 4, conversions: 0, action: 'none' },
-      { id: 46, term: 'labor lawyer free consultation', impressions: 19, clicks: 3, conversions: 7, action: 'none' },
-      { id: 47, term: 'hostile work environment', impressions: 91, clicks: 6, conversions: 2, action: 'none' },
-      { id: 48, term: 'getting workers compensation', impressions: 20, clicks: 3, conversions: 0, action: 'none' },
-      { id: 49, term: 'employment attorney wrongful termination', impressions: 37, clicks: 4, conversions: 0, action: 'none' },
-      { id: 50, term: 'lawyers california', impressions: 98, clicks: 14, conversions: 3, action: 'none' },
-      { id: 51, term: 'workers comp attorney in houston texas', impressions: 15, clicks: 7, conversions: 0, action: 'none' },
-      { id: 52, term: 'lawyer for defamation of character', impressions: 4, clicks: 3, conversions: 1, action: 'none' },
-      { id: 53, term: 'labor board', impressions: 83, clicks: 4, conversions: 0, action: 'none' },
-      { id: 54, term: 'corporate legal services', impressions: 16, clicks: 5, conversions: 1, action: 'none' },
-      { id: 55, term: 'attorney law lawyer', impressions: 29, clicks: 4, conversions: 0, action: 'none' },
-      { id: 56, term: 'employment law and compliance', impressions: 21, clicks: 3, conversions: 1, action: 'none' },
-      { id: 57, term: 'workers compensation vermont', impressions: 10, clicks: 3, conversions: 0, action: 'none' },
-      { id: 58, term: 'attorney services', impressions: 46, clicks: 6, conversions: 0, action: 'none' },
-      { id: 59, term: 'hostile work environment california', impressions: 131, clicks: 8, conversions: 0, action: 'none' },
-      { id: 60, term: 'lawsuit lawyers', impressions: 44, clicks: 5, conversions: 0, action: 'none' },
-      { id: 61, term: 'attorney california', impressions: 293, clicks: 40, conversions: 0, action: 'none' },
-      { id: 62, term: 'legal lawyer nearby', impressions: 419, clicks: 56, conversions: 2, action: 'none' },
-      { id: 63, term: 'corporate legal services', impressions: 1120, clicks: 275, conversions: 11, action: 'none' },
-      { id: 64, term: 'longshore attorney', impressions: 11, clicks: 3, conversions: 0, action: 'none' },
-      { id: 65, term: 'sacramento employment lawyer', impressions: 15, clicks: 3, conversions: 0, action: 'none' },
-      { id: 66, term: 'employment attorney portland oregon', impressions: 3, clicks: 3, conversions: 0, action: 'none' },
-      { id: 67, term: 'best attorney near me', impressions: 20, clicks: 6, conversions: 1, action: 'none' },
-      { id: 68, term: 'compensation lawyer', impressions: 46, clicks: 7, conversions: 0, action: 'none' },
-      { id: 69, term: 'employment attorney rancho cucamonga', impressions: 27, clicks: 3, conversions: 0, action: 'none' },
-      { id: 70, term: 'law attorney nearby', impressions: 103, clicks: 13, conversions: 0, action: 'none' },
-      { id: 71, term: 'federal employment attorney', impressions: 36, clicks: 3, conversions: 0, action: 'none' },
-      { id: 72, term: 'legal lawyer nearby', impressions: 23, clicks: 4, conversions: 0, action: 'none' },
-      { id: 73, term: 'whistleblower', impressions: 174, clicks: 10, conversions: 4, action: 'none' },
-      { id: 74, term: 'wisconsin workers compensation loss of earning capacity', impressions: 20, clicks: 4, conversions: 0, action: 'none' },
-      { id: 75, term: 'workers compensation lawyers in orlando florida', impressions: 13, clicks: 3, conversions: 0, action: 'none' },
-      { id: 76, term: 'lawyer law', impressions: 14, clicks: 4, conversions: 0, action: 'none' },
-      { id: 77, term: 'lawyer office', impressions: 65, clicks: 8, conversions: 0, action: 'none' },
-      { id: 78, term: 'corporate legal services', impressions: 73, clicks: 11, conversions: 0, action: 'none' },
-      { id: 79, term: 'no win no fee compensation solicitor', impressions: 25, clicks: 4, conversions: 0, action: 'none' },
-      { id: 80, term: 'litigation lawyer', impressions: 82, clicks: 14, conversions: 0, action: 'none' },
-      { id: 81, term: 'law office of', impressions: 18, clicks: 6, conversions: 0, action: 'none' },
-      { id: 82, term: 'workers compensation attorneys in oklahoma city', impressions: 4, clicks: 3, conversions: 0, action: 'none' },
-      { id: 83, term: 'free consultation employment lawyer', impressions: 22, clicks: 4, conversions: 0, action: 'none' },
-      { id: 84, term: 'law firm', impressions: 91, clicks: 13, conversions: 0, action: 'none' },
-      { id: 85, term: 'employee attorney', impressions: 17, clicks: 3, conversions: 1, action: 'none' },
-      { id: 86, term: 'lawyer office', impressions: 124, clicks: 19, conversions: 0, action: 'none' },
-      { id: 87, term: 'lawyers in area', impressions: 15, clicks: 3, conversions: 0, action: 'none' },
-      { id: 88, term: 'workers compensation lawyer near me', impressions: 12, clicks: 3, conversions: 0, action: 'none' },
-      { id: 89, term: 'employment lawyer san diego', impressions: 151, clicks: 6, conversions: 4, action: 'none' },
-      { id: 90, term: 'personal lawsuit attorney', impressions: 225, clicks: 31, conversions: 0, action: 'none' },
-      { id: 91, term: 'law attorney nearby', impressions: 19, clicks: 3, conversions: 0, action: 'none' },
-      { id: 92, term: 'employment discrimination attorney', impressions: 12, clicks: 3, conversions: 0, action: 'none' },
-      { id: 93, term: 'if someone threatens you online', impressions: 19, clicks: 5, conversions: 1, action: 'none' },
-      { id: 94, term: 'lawsuit lawyers in my area', impressions: 32, clicks: 3, conversions: 0, action: 'none' },
-      { id: 95, term: 'compensation for job injury', impressions: 66, clicks: 12, conversions: 0, action: 'none' },
-      { id: 96, term: 'best work injury attorney near me', impressions: 119, clicks: 26, conversions: 1, action: 'none' },
-      { id: 97, term: 'employment lawyer san diego free consultation', impressions: 88, clicks: 7, conversions: 1, action: 'none' },
-      { id: 98, term: 'law attorney nearby', impressions: 1519, clicks: 189, conversions: 1, action: 'none' },
-      { id: 99, term: 'labor board california', impressions: 44, clicks: 4, conversions: 1, action: 'none' },
-      { id: 100, term: 'corporate legal services', impressions: 146, clicks: 33, conversions: 2, action: 'none' },
-      { id: 101, term: 'veterans appeals lawyers', impressions: 150, clicks: 57, conversions: 12, action: 'none' },
-      { id: 102, term: 'best employment lawyers in orange county ca', impressions: 16, clicks: 3, conversions: 1, action: 'none' },
-      { id: 103, term: 'lawyer services', impressions: 18, clicks: 5, conversions: 0, action: 'none' },
-      { id: 104, term: 'legal lawyers', impressions: 28, clicks: 5, conversions: 2, action: 'none' },
-      { id: 105, term: 'chambers california', impressions: 10, clicks: 3, conversions: 0, action: 'none' },
-      { id: 106, term: 'employment attorney san diego', impressions: 60, clicks: 3, conversions: 2, action: 'none' },
-      { id: 107, term: 'los mejores abogados de accidentes de trabajo', impressions: 6, clicks: 3, conversions: 0, action: 'none' },
-      { id: 108, term: 'industrial injury attorney', impressions: 19, clicks: 5, conversions: 0, action: 'none' },
-      { id: 109, term: 'get workers compensation', impressions: 42, clicks: 7, conversions: 0, action: 'none' },
-      { id: 110, term: 'legal attorneys', impressions: 13, clicks: 3, conversions: 0, action: 'none' },
-      { id: 111, term: 'best workers compensation lawyers in california', impressions: 13, clicks: 6, conversions: 9, action: 'none' },
-      { id: 112, term: 'lawyer for compensation', impressions: 20, clicks: 3, conversions: 0, action: 'none' },
-      { id: 113, term: 'cordoba legal group', impressions: 26, clicks: 4, conversions: 0, action: 'none' },
-      { id: 114, term: 'report harassment', impressions: 16, clicks: 3, conversions: 0, action: 'none' },
-      { id: 115, term: 'attorney law lawyer', impressions: 27, clicks: 3, conversions: 0, action: 'none' },
-      { id: 116, term: 'employment attorney fresno', impressions: 16, clicks: 3, conversions: 0, action: 'none' },
-      { id: 117, term: 'houston workers comp attorney', impressions: 18, clicks: 3, conversions: 0, action: 'none' },
-      { id: 118, term: 'employment attorney orange county', impressions: 29, clicks: 5, conversions: 3, action: 'none' },
-      { id: 119, term: 'labor & employment lawyers', impressions: 17, clicks: 3, conversions: 0, action: 'none' },
-      { id: 120, term: 'construction accident attorney', impressions: 18, clicks: 3, conversions: 0, action: 'none' },
-      { id: 121, term: 'attorney law lawyer', impressions: 376, clicks: 50, conversions: 1, action: 'none' },
-      { id: 122, term: 'lawyer office', impressions: 521, clicks: 71, conversions: 1, action: 'none' },
-      { id: 123, term: 'law attorney nearby', impressions: 63, clicks: 3, conversions: 0, action: 'none' },
-      { id: 124, term: 'lawyer for injury at work', impressions: 9, clicks: 4, conversions: 0, action: 'none' },
-      { id: 125, term: 'injury compensation lawyers nearby', impressions: 20, clicks: 3, conversions: 0, action: 'none' },
-      { id: 126, term: 'pro bono lawyers in sacramento', impressions: 5, clicks: 5, conversions: 0, action: 'none' },
-      { id: 127, term: 'federal tort claims act attorneys near me', impressions: 30, clicks: 11, conversions: 0, action: 'none' }
-    ];
-    
-    setSearchTerms(actualSearchTerms);
-    setLoading(false);
-  }, []);
+        const SearchTermManager = () => {
+          const [searchTerms, setSearchTerms] = useState([]);
+          const [loading, setLoading] = useState(true);
+          const [filter, setFilter] = useState('all');
+          const [searchQuery, setSearchQuery] = useState('');
 
-  const [filter, setFilter] = useState('all');
-  const [searchQuery, setSearchQuery] = useState('');
+          useEffect(() => {
+            const actualSearchTerms = [
+              { id: 1, term: 'workplace lawyers no win no fee near me', impressions: 36, clicks: 18, conversions: 0, action: 'none' },
+              { id: 2, term: 'wrongful termination california', impressions: 160, clicks: 3, conversions: 5, action: 'none' },
+              { id: 3, term: 'litigation attorneys', impressions: 29, clicks: 5, conversions: 0, action: 'none' },
+              { id: 4, term: 'law office', impressions: 1635, clicks: 226, conversions: 3, action: 'none' },
+              { id: 5, term: 'lawyer law', impressions: 75, clicks: 13, conversions: 0, action: 'none' },
+              { id: 6, term: 'litigation lawyers', impressions: 45, clicks: 11, conversions: 0, action: 'none' },
+              { id: 7, term: 'houston workers comp attorney', impressions: 38, clicks: 8, conversions: 0, action: 'none' },
+              { id: 8, term: 'professional solicitors', impressions: 9, clicks: 4, conversions: 0, action: 'none' },
+              { id: 9, term: 'harassment at work', impressions: 31, clicks: 4, conversions: 0, action: 'none' },
+              { id: 10, term: 'defamation lawyer', impressions: 26, clicks: 3, conversions: 2, action: 'none' }
+            ];
+            
+            setSearchTerms(actualSearchTerms);
+            setLoading(false);
+          }, []);
 
-  const filteredTerms = useMemo(() => {
-    let filtered = searchTerms;
-    
-    if (filter !== 'all') {
-      filtered = filtered.filter(term => term.action === filter);
-    }
-    
-    if (searchQuery) {
-      filtered = filtered.filter(term => 
-        term.term.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-    }
-    
-    return filtered;
-  }, [searchTerms, filter, searchQuery]);
+          const filteredTerms = useMemo(() => {
+            let filtered = searchTerms;
+            if (filter !== 'all') {
+              filtered = filtered.filter(term => term.action === filter);
+            }
+            if (searchQuery) {
+              filtered = filtered.filter(term => 
+                term.term.toLowerCase().includes(searchQuery.toLowerCase())
+              );
+            }
+            return filtered;
+          }, [searchTerms, filter, searchQuery]);
 
-  const updateAction = (id, action) => {
-    setSearchTerms(prev => 
-      prev.map(term => 
-        term.id === id ? { ...term, action } : term
-      )
-    );
-  };
+          const updateAction = (id, action) => {
+            setSearchTerms(prev => 
+              prev.map(term => 
+                term.id === id ? { ...term, action } : term
+              )
+            );
+          };
 
-  const getActionColor = (action) => {
-    switch(action) {
-      case 'add': return 'bg-green-100 text-green-800';
-      case 'exclude': return 'bg-red-100 text-red-800';
-      default: return 'bg-gray-100 text-gray-600';
-    }
-  };
+          const getActionCounts = () => {
+            return searchTerms.reduce((acc, term) => {
+              acc[term.action] = (acc[term.action] || 0) + 1;
+              return acc;
+            }, {});
+          };
 
-  const getActionCounts = () => {
-    return searchTerms.reduce((acc, term) => {
-      acc[term.action] = (acc[term.action] || 0) + 1;
-      return acc;
-    }, {});
-  };
+          const actionCounts = getActionCounts();
 
-  const actionCounts = getActionCounts();
+          const exportDecisions = () => {
+            const decisions = searchTerms.filter(term => term.action !== 'none');
+            const csvContent = "data:text/csv;charset=utf-8," + 
+              "Search Term,Action,Impressions,Clicks,Conversions\\n" +
+              decisions.map(term => 
+                `"${term.term}",${term.action},${term.impressions},${term.clicks},${term.conversions}`
+              ).join("\\n");
+            
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "search_term_decisions.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+          };
 
-  const exportDecisions = () => {
-    const decisions = searchTerms.filter(term => term.action !== 'none');
-    const csvContent = "data:text/csv;charset=utf-8," + 
-      "Search Term,Action,Impressions,Clicks,Conversions\n" +
-      decisions.map(term => 
-        `"${term.term}",${term.action},${term.impressions},${term.clicks},${term.conversions}`
-      ).join("\n");
-    
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
-    link.setAttribute("download", "search_term_decisions.csv");
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
+          const resetAll = () => {
+            setSearchTerms(prev => 
+              prev.map(term => ({ ...term, action: 'none' }))
+            );
+          };
 
-  const resetAll = () => {
-    setSearchTerms(prev => 
-      prev.map(term => ({ ...term, action: 'none' }))
-    );
-  };
+          if (loading) {
+            return React.createElement('div', { className: 'max-w-7xl mx-auto p-6 bg-white' },
+              React.createElement('div', { className: 'flex items-center justify-center h-64' },
+                React.createElement('div', { className: 'text-center' },
+                  React.createElement('div', { className: 'animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4' }),
+                  React.createElement('p', { className: 'text-gray-600' }, 'Loading your search terms...')
+                )
+              )
+            );
+          }
 
-  if (loading) {
-    return (
-      <div className="max-w-7xl mx-auto p-6 bg-white">
-        <div className="flex items-center justify-center h-64">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-            <p className="text-gray-600">Loading your search terms...</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
+          return React.createElement('div', { className: 'max-w-7xl mx-auto p-6 bg-white' },
+            React.createElement('div', { className: 'mb-6' },
+              React.createElement('h1', { className: 'text-2xl font-bold text-gray-900 mb-2' }, 'Search Term Manager'),
+              React.createElement('p', { className: 'text-gray-600' }, 'Review and manage search terms from your Google Ads campaigns')
+            ),
+            React.createElement('div', { className: 'grid grid-cols-1 md:grid-cols-4 gap-4 mb-6' },
+              React.createElement('div', { className: 'bg-blue-50 p-4 rounded-lg' },
+                React.createElement('div', { className: 'text-2xl font-bold text-blue-600' }, searchTerms.length),
+                React.createElement('div', { className: 'text-sm text-blue-600' }, 'Total Terms')
+              ),
+              React.createElement('div', { className: 'bg-green-50 p-4 rounded-lg' },
+                React.createElement('div', { className: 'text-2xl font-bold text-green-600' }, actionCounts.add || 0),
+                React.createElement('div', { className: 'text-sm text-green-600' }, 'To Add')
+              ),
+              React.createElement('div', { className: 'bg-red-50 p-4 rounded-lg' },
+                React.createElement('div', { className: 'text-2xl font-bold text-red-600' }, actionCounts.exclude || 0),
+                React.createElement('div', { className: 'text-sm text-red-600' }, 'To Exclude')
+              ),
+              React.createElement('div', { className: 'bg-gray-50 p-4 rounded-lg' },
+                React.createElement('div', { className: 'text-2xl font-bold text-gray-600' }, actionCounts.none || 0),
+                React.createElement('div', { className: 'text-sm text-gray-600' }, 'No Action')
+              )
+            ),
+            React.createElement('div', { className: 'bg-white rounded-lg border border-gray-200 overflow-hidden' },
+              React.createElement('div', { className: 'overflow-x-auto' },
+                React.createElement('table', { className: 'w-full' },
+                  React.createElement('thead', { className: 'bg-gray-50' },
+                    React.createElement('tr', null,
+                      React.createElement('th', { className: 'px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider' }, 'Search Term'),
+                      React.createElement('th', { className: 'px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider' }, 'Impressions'),
+                      React.createElement('th', { className: 'px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider' }, 'Clicks'),
+                      React.createElement('th', { className: 'px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider' }, 'Conversions'),
+                      React.createElement('th', { className: 'px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider' }, 'Action')
+                    )
+                  ),
+                  React.createElement('tbody', { className: 'bg-white divide-y divide-gray-200' },
+                    filteredTerms.map((term) =>
+                      React.createElement('tr', { key: term.id, className: 'hover:bg-gray-50' },
+                        React.createElement('td', { className: 'px-6 py-4 whitespace-nowrap' },
+                          React.createElement('div', { className: 'text-sm font-medium text-gray-900' }, term.term)
+                        ),
+                        React.createElement('td', { className: 'px-6 py-4 whitespace-nowrap text-sm text-gray-900' }, term.impressions.toLocaleString()),
+                        React.createElement('td', { className: 'px-6 py-4 whitespace-nowrap text-sm text-gray-900' }, term.clicks),
+                        React.createElement('td', { className: 'px-6 py-4 whitespace-nowrap text-sm text-gray-900' }, term.conversions),
+                        React.createElement('td', { className: 'px-6 py-4 whitespace-nowrap' },
+                          React.createElement('div', { className: 'flex gap-2' },
+                            React.createElement('button', {
+                              onClick: () => updateAction(term.id, 'add'),
+                              className: `px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+                                term.action === 'add' 
+                                  ? 'bg-green-600 text-white' 
+                                  : 'bg-gray-200 text-gray-700 hover:bg-green-100'
+                              }`
+                            }, 'Add'),
+                            React.createElement('button', {
+                              onClick: () => updateAction(term.id, 'exclude'),
+                              className: `px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+                                term.action === 'exclude' 
+                                  ? 'bg-red-600 text-white' 
+                                  : 'bg-gray-200 text-gray-700 hover:bg-red-100'
+                              }`
+                            }, 'Exclude'),
+                            React.createElement('button', {
+                              onClick: () => updateAction(term.id, 'none'),
+                              className: `px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+                                term.action === 'none' 
+                                  ? 'bg-gray-600 text-white' 
+                                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                              }`
+                            }, 'None')
+                          )
+                        )
+                      )
+                    )
+                  )
+                )
+              )
+            )
+          );
+        };
 
-  return (
-    <div className="max-w-7xl mx-auto p-6 bg-white">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">Search Term Manager</h1>
-        <p className="text-gray-600">Review and manage search terms from your Google Ads campaigns</p>
-      </div>
-
-      {/* Stats Summary */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <div className="bg-blue-50 p-4 rounded-lg">
-          <div className="text-2xl font-bold text-blue-600">{searchTerms.length}</div>
-          <div className="text-sm text-blue-600">Total Terms</div>
-        </div>
-        <div className="bg-green-50 p-4 rounded-lg">
-          <div className="text-2xl font-bold text-green-600">{actionCounts.add || 0}</div>
-          <div className="text-sm text-green-600">To Add</div>
-        </div>
-        <div className="bg-red-50 p-4 rounded-lg">
-          <div className="text-2xl font-bold text-red-600">{actionCounts.exclude || 0}</div>
-          <div className="text-sm text-red-600">To Exclude</div>
-        </div>
-        <div className="bg-gray-50 p-4 rounded-lg">
-          <div className="text-2xl font-bold text-gray-600">{actionCounts.none || 0}</div>
-          <div className="text-sm text-gray-600">No Action</div>
-        </div>
-      </div>
-
-      {/* Controls */}
-      <div className="flex flex-col sm:flex-row gap-4 mb-6">
-        <div className="flex-1">
-          <div className="relative">
-            <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search terms..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-          </div>
-        </div>
-        
-        <div className="flex gap-2">
-          <select
-            value={filter}
-            onChange={(e) => setFilter(e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          >
-            <option value="all">All Terms</option>
-            <option value="add">To Add</option>
-            <option value="exclude">To Exclude</option>
-            <option value="none">No Action</option>
-          </select>
-          
-          <button
-            onClick={exportDecisions}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2"
-          >
-            <Download className="h-4 w-4" />
-            Export
-          </button>
-          
-          <button
-            onClick={resetAll}
-            className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 flex items-center gap-2"
-          >
-            <RotateCcw className="h-4 w-4" />
-            Reset
-          </button>
-        </div>
-      </div>
-
-      {/* Search Terms Table */}
-      <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Search Term
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Impressions
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Clicks
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Conversions
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Action
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {filteredTerms.map((term) => (
-                <tr key={term.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-gray-900">{term.term}</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {term.impressions.toLocaleString()}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {term.clicks}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {term.conversions}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => updateAction(term.id, 'add')}
-                        className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
-                          term.action === 'add' 
-                            ? 'bg-green-600 text-white' 
-                            : 'bg-gray-200 text-gray-700 hover:bg-green-100'
-                        }`}
-                      >
-                        Add
-                      </button>
-                      <button
-                        onClick={() => updateAction(term.id, 'exclude')}
-                        className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
-                          term.action === 'exclude' 
-                            ? 'bg-red-600 text-white' 
-                            : 'bg-gray-200 text-gray-700 hover:bg-red-100'
-                        }`}
-                      >
-                        Exclude
-                      </button>
-                      <button
-                        onClick={() => updateAction(term.id, 'none')}
-                        className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
-                          term.action === 'none' 
-                            ? 'bg-gray-600 text-white' 
-                            : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                        }`}
-                      >
-                        None
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      {filteredTerms.length === 0 && (
-        <div className="text-center py-8 text-gray-500">
-          No search terms found matching your criteria.
-        </div>
-      )}
-    </div>
-  );
-};
-
-export default SearchTermManager;
+        ReactDOM.render(React.createElement(SearchTermManager), document.getElementById('root'));
+    </script>
+</body>
+</html>
