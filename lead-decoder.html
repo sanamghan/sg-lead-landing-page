@@ -113,8 +113,8 @@
 
         <div class="reference">
             <h3>📝 Quick Reference:</h3>
-            <p><strong>Campaign ID 21251904842</strong> = Search Campaign</p>
-            <p><strong>Campaign ID 21826252044</strong> = Performance Max Campaign</p>
+            <p><strong>Campaign ID 22813799895</strong> = General Search Campaign</p>
+            <p><strong>Campaign ID 22813981578</strong> = Category Search Campaign</p>
         </div>
 
         <div style="margin-top: 30px; padding: 20px; background-color: #e3f2fd; border-radius: 5px; border-left: 4px solid #2196F3;">
@@ -126,10 +126,10 @@
                 <li><strong>Click "Copy All"</strong> to copy the decoded campaign information</li>
                 <li><strong>When converting the lead to a contact in Clio</strong>, paste the information into these custom fields:
                     <ul style="margin-top: 10px;">
-                        <li><strong>Campaign Type</strong> (Search Campaign or Performance Max Campaign)</li>
+                        <li><strong>Campaign Type</strong> (General Search Campaign or Category Search Campaign)</li>
                         <li><strong>Campaign ID</strong> (the number from the URL)</li>
-                        <li><strong>Keyword</strong> (for Search campaigns only)</li>
-                        <li><strong>Match Type</strong> (for Search campaigns only)</li>
+                        <li><strong>Keyword</strong> (shows which search term triggered the ad)</li>
+                        <li><strong>Match Type</strong> (exact, broad, phrase, etc.)</li>
                     </ul>
                 </li>
                 <li><strong>Save the contact</strong> with the campaign tracking information</li>
@@ -159,10 +159,10 @@
                 const campaignId = params.get('campaign') || params.get('gad_campaignid');
                 if (campaignId) {
                     let campaignType = 'Unknown Campaign';
-                    if (campaignId === '21251904842') {
-                        campaignType = 'Search Campaign';
-                    } else if (campaignId === '21826252044') {
-                        campaignType = 'Performance Max Campaign';
+                    if (campaignId === '22813799895') {
+                        campaignType = 'General Search Campaign';
+                    } else if (campaignId === '22813981578') {
+                        campaignType = 'Category Search Campaign';
                     }
                     decodedInfo.push({
                         label: 'Campaign Type',
