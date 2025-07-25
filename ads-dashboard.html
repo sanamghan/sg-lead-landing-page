@@ -406,16 +406,20 @@
 
         @media (max-width: 768px) {
             .container {
-                padding: 15px;
+                padding: 10px;
             }
             
             .header h1 {
-                font-size: 1.8em;
+                font-size: 1.6em;
+            }
+            
+            .header .subtitle {
+                font-size: 0.9em;
             }
             
             .metrics-grid {
-                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-                gap: 15px;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
             }
             
             .yesterday-grid {
@@ -423,11 +427,156 @@
             }
             
             .metric-value {
-                font-size: 1.8em;
+                font-size: 1.6em;
             }
             
             .section {
-                padding: 20px;
+                padding: 15px;
+                margin-bottom: 15px;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                gap: 10px;
+                align-items: flex-start;
+            }
+            
+            .section-header h2 {
+                font-size: 1.2em;
+            }
+            
+            /* Mobile-friendly table replacement */
+            .data-table {
+                display: none;
+            }
+            
+            .mobile-cards {
+                display: block;
+            }
+            
+            .mobile-card {
+                background: white;
+                border-radius: 8px;
+                padding: 15px;
+                margin-bottom: 15px;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                border-left: 4px solid #3b82f6;
+            }
+            
+            .mobile-card-header {
+                font-weight: bold;
+                font-size: 1.1em;
+                margin-bottom: 10px;
+                color: #1e293b;
+            }
+            
+            .mobile-card-row {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 8px;
+                padding: 4px 0;
+                border-bottom: 1px solid #f1f5f9;
+            }
+            
+            .mobile-card-row:last-child {
+                border-bottom: none;
+                margin-bottom: 0;
+            }
+            
+            .mobile-card-label {
+                font-weight: 600;
+                color: #64748b;
+                font-size: 0.9em;
+            }
+            
+            .mobile-card-value {
+                font-weight: 600;
+                color: #1e293b;
+                text-align: right;
+            }
+            
+            /* Mobile daily performance cards */
+            .daily-cards-mobile {
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            
+            .daily-cards-desktop {
+                display: none;
+            }
+            
+            /* Mobile alerts and opportunities */
+            .alert-item, .opportunity-item {
+                padding: 15px;
+                margin-bottom: 12px;
+            }
+            
+            .item-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+            
+            .item-title {
+                font-size: 1em;
+            }
+            
+            .recommended-action {
+                margin-top: 10px;
+                padding: 12px;
+            }
+            
+            /* Mobile waste analysis */
+            .waste-mobile-cards {
+                display: block;
+            }
+            
+            .waste-desktop-table {
+                display: none;
+            }
+            
+            /* Mobile insights */
+            .mobile-insights {
+                font-size: 0.9em;
+            }
+            
+            .mobile-insights > div {
+                margin-bottom: 10px;
+                padding-bottom: 10px;
+                border-bottom: 1px solid #e2e8f0;
+            }
+            
+            .mobile-insights > div:last-child {
+                border-bottom: none;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .mobile-cards {
+                display: none;
+            }
+            
+            .data-table {
+                display: table;
+            }
+            
+            .daily-cards-mobile {
+                display: none;
+            }
+            
+            .daily-cards-desktop {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+                gap: 12px;
+            }
+            
+            .waste-mobile-cards {
+                display: none;
+            }
+            
+            .waste-desktop-table {
+                display: table;
             }
         }
     </style>
@@ -520,14 +669,10 @@
         <div class="section">
             <div class="section-header">
                 <h2>📈 7-Day Performance Trends</h2>
-                <div class="section-toggle">
-                    <button class="active">Daily Performance</button>
-                    <button>CPA Trends</button>
-                    <button>Insights</button>
-                </div>
             </div>
             
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-top: 20px;">
+            <!-- Desktop view -->
+            <div class="daily-cards-desktop" style="margin-top: 20px;">
                 <div style="text-align: center; padding: 12px; background: #f0fdf4; border-radius: 8px; border-left: 4px solid #16a34a;">
                     <div style="font-size: 1.2em; font-weight: bold; color: #16a34a;">Friday</div>
                     <div style="color: #166534; font-size: 0.9em; margin: 4px 0;">Best Day</div>
@@ -572,9 +717,41 @@
                 </div>
             </div>
 
+            <!-- Mobile view -->
+            <div class="daily-cards-mobile" style="margin-top: 20px;">
+                <div style="text-align: center; padding: 12px; background: #f0fdf4; border-radius: 8px; border-left: 4px solid #16a34a;">
+                    <div style="font-size: 1.2em; font-weight: bold; color: #16a34a;">Friday - Best Day</div>
+                    <div style="font-size: 0.9em; color: #374151; margin-top: 5px;">13 conversions • $12.79 CPA</div>
+                </div>
+                <div style="text-align: center; padding: 12px; background: #fef2f2; border-radius: 8px; border-left: 4px solid #dc2626;">
+                    <div style="font-size: 1.2em; font-weight: bold; color: #dc2626;">Tuesday - Worst Day</div>
+                    <div style="font-size: 0.9em; color: #374151; margin-top: 5px;">2 conversions • $144.83 CPA</div>
+                </div>
+                <div style="text-align: center; padding: 12px; background: #f0fdf4; border-radius: 8px; border-left: 4px solid #16a34a;">
+                    <div style="font-size: 1.2em; font-weight: bold; color: #16a34a;">Thursday - Strong Day</div>
+                    <div style="font-size: 0.9em; color: #374151; margin-top: 5px;">12 conversions • $13.77 CPA</div>
+                </div>
+                <div style="text-align: center; padding: 12px; background: #f8fafc; border-radius: 8px; border-left: 4px solid #64748b;">
+                    <div style="font-size: 1.1em; font-weight: bold; color: #64748b;">Wednesday</div>
+                    <div style="font-size: 0.9em; color: #374151; margin-top: 5px;">8 conversions • $22.18 CPA</div>
+                </div>
+                <div style="text-align: center; padding: 12px; background: #f8fafc; border-radius: 8px; border-left: 4px solid #64748b;">
+                    <div style="font-size: 1.1em; font-weight: bold; color: #64748b;">Saturday</div>
+                    <div style="font-size: 0.9em; color: #374151; margin-top: 5px;">7 conversions • $15.48 CPA</div>
+                </div>
+                <div style="text-align: center; padding: 12px; background: #fff7ed; border-radius: 8px; border-left: 4px solid #ea580c;">
+                    <div style="font-size: 1.1em; font-weight: bold; color: #ea580c;">Sunday</div>
+                    <div style="font-size: 0.9em; color: #374151; margin-top: 5px;">4 conversions • $30.39 CPA</div>
+                </div>
+                <div style="text-align: center; padding: 12px; background: #fef3c7; border-radius: 8px; border-left: 4px solid #f59e0b;">
+                    <div style="font-size: 1.1em; font-weight: bold; color: #f59e0b;">Monday</div>
+                    <div style="font-size: 0.9em; color: #374151; margin-top: 5px;">1 conversion • $94.05 CPA</div>
+                </div>
+            </div>
+
             <div style="margin-top: 20px; padding: 15px; background: #f8fafc; border-radius: 8px; border-left: 4px solid #3b82f6;">
                 <h4 style="color: #1e40af; margin-bottom: 10px;">📊 7-Day Analysis Summary</h4>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                <div class="mobile-insights" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
                     <div>
                         <strong style="color: #16a34a;">Best Performers:</strong>
                         <br><small>Friday & Thursday with sub-$15 CPAs</small>
@@ -699,7 +876,8 @@
                 <h2>📊 Campaign Performance (Daily + 7-Day Trends)</h2>
             </div>
             
-            <table class="data-table" id="campaign-performance-table">
+            <!-- Desktop Table -->
+            <table class="data-table waste-desktop-table" id="campaign-performance-table">
                 <thead>
                     <tr>
                         <th>Campaign</th>
@@ -739,8 +917,67 @@
                 </tbody>
             </table>
 
+            <!-- Mobile Cards -->
+            <div class="mobile-cards">
+                <div class="mobile-card">
+                    <div class="mobile-card-header">🔴 Sparrow_Search_Categories</div>
+                    <div class="mobile-card-row">
+                        <span class="mobile-card-label">Yesterday</span>
+                        <span class="mobile-card-value">$190.88 • 1 conv • $190.88 CPA</span>
+                    </div>
+                    <div class="mobile-card-row">
+                        <span class="mobile-card-label">7-Day Total</span>
+                        <span class="mobile-card-value">$785.40 • 6 conv • $130.90 avg CPA</span>
+                    </div>
+                    <div class="mobile-card-row">
+                        <span class="mobile-card-label">Status</span>
+                        <span class="mobile-card-value"><span class="status-badge status-warning">High CPA</span></span>
+                    </div>
+                    <div class="mobile-card-row">
+                        <span class="mobile-card-label">Action</span>
+                        <span class="mobile-card-value">Review keywords and reduce bids</span>
+                    </div>
+                </div>
+
+                <div class="mobile-card">
+                    <div class="mobile-card-header">🟢 Sparrow_Search_General</div>
+                    <div class="mobile-card-row">
+                        <span class="mobile-card-label">Yesterday</span>
+                        <span class="mobile-card-value">$98.78 • 1 conv • $98.78 CPA</span>
+                    </div>
+                    <div class="mobile-card-row">
+                        <span class="mobile-card-label">7-Day Total</span>
+                        <span class="mobile-card-value">$337.16 • 41 conv • $8.22 avg CPA</span>
+                    </div>
+                    <div class="mobile-card-row">
+                        <span class="mobile-card-label">Status</span>
+                        <span class="mobile-card-value"><span class="status-badge status-success">Strong Weekly</span></span>
+                    </div>
+                    <div class="mobile-card-row">
+                        <span class="mobile-card-label">Action</span>
+                        <span class="mobile-card-value">Yesterday was anomaly - monitor today</span>
+                    </div>
+                </div>
+            </div>
+
             <div style="margin-top: 15px; padding: 12px; background: #f0f9ff; border-radius: 8px; border-left: 4px solid #0ea5e9;">
                 <h4 style="color: #0c4a6e; margin-bottom: 8px;">📈 Weekly vs Daily Insights</h4>
+                <div class="mobile-insights" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px; font-size: 0.9em;">
+                    <div>
+                        <strong style="color: #dc2626;">Categories Campaign:</strong>
+                        <br><small>Yesterday's $190.88 CPA much higher than 7-day avg of $130.90</small>
+                    </div>
+                    <div>
+                        <strong style="color: #16a34a;">General Campaign:</strong>
+                        <br><small>Excellent 7-day performance ($8.22 avg) but yesterday spiked to $98.78</small>
+                    </div>
+                    <div>
+                        <strong style="color: #f59e0b;">Pattern Analysis:</strong>
+                        <br><small>General carries most conversions (41 vs 6) but had off day yesterday</small>
+                    </div>
+                </div>
+            </div>
+        </div> style="color: #0c4a6e; margin-bottom: 8px;">📈 Weekly vs Daily Insights</h4>
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px; font-size: 0.9em;">
                     <div>
                         <strong style="color: #dc2626;">Categories Campaign:</strong>
@@ -765,7 +1002,9 @@
             </div>
             
             <h3 style="margin: 20px 0 15px 0; color: #374151;">Recurring Wasteful Search Terms</h3>
-            <table class="data-table" id="waste-analysis-table">
+            
+            <!-- Desktop Table -->
+            <table class="data-table waste-desktop-table" id="waste-analysis-table">
                 <thead>
                     <tr>
                         <th>Search Term</th>
@@ -795,6 +1034,57 @@
                     </tr>
                 </tbody>
             </table>
+
+            <!-- Mobile Cards -->
+            <div class="waste-mobile-cards">
+                <div class="mobile-card">
+                    <div class="mobile-card-header">🚨 "legal lawyer nearby"</div>
+                    <div class="mobile-card-row">
+                        <span class="mobile-card-label">Days Active</span>
+                        <span class="mobile-card-value">3 of 7 days</span>
+                    </div>
+                    <div class="mobile-card-row">
+                        <span class="mobile-card-label">Total Waste</span>
+                        <span class="mobile-card-value">$89.40</span>
+                    </div>
+                    <div class="mobile-card-row">
+                        <span class="mobile-card-label">Action</span>
+                        <span class="mobile-card-value"><span class="status-badge status-warning">AI reduced bids - monitor today</span></span>
+                    </div>
+                </div>
+
+                <div class="mobile-card">
+                    <div class="mobile-card-header">🚨 "employment lawyer"</div>
+                    <div class="mobile-card-row">
+                        <span class="mobile-card-label">Days Active</span>
+                        <span class="mobile-card-value">4 of 7 days</span>
+                    </div>
+                    <div class="mobile-card-row">
+                        <span class="mobile-card-label">Total Waste</span>
+                        <span class="mobile-card-value">$67.15</span>
+                    </div>
+                    <div class="mobile-card-row">
+                        <span class="mobile-card-label">Action</span>
+                        <span class="mobile-card-value"><span class="status-badge status-warning">AI reduced bids - monitor today</span></span>
+                    </div>
+                </div>
+
+                <div class="mobile-card">
+                    <div class="mobile-card-header">🚨 "free consultation employment lawyer"</div>
+                    <div class="mobile-card-row">
+                        <span class="mobile-card-label">Days Active</span>
+                        <span class="mobile-card-value">3 of 7 days</span>
+                    </div>
+                    <div class="mobile-card-row">
+                        <span class="mobile-card-label">Total Waste</span>
+                        <span class="mobile-card-value">$56.25</span>
+                    </div>
+                    <div class="mobile-card-row">
+                        <span class="mobile-card-label">Action</span>
+                        <span class="mobile-card-value"><span class="status-badge status-warning">AI reduced bids - monitor today</span></span>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
