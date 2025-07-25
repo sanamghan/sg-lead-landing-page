@@ -208,65 +208,12 @@
             gap: 10px;
         }
 
-        .section-toggle {
-            display: flex;
-            gap: 5px;
-        }
-
-        .section-toggle button {
-            padding: 6px 12px;
-            border: 1px solid #e2e8f0;
-            background: white;
-            border-radius: 15px;
-            font-size: 0.8em;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .section-toggle button.active {
-            background: #3b82f6;
-            color: white;
-            border-color: #3b82f6;
-        }
-
-        .trend-chart {
-            background: #f8fafc;
-            border-radius: 8px;
-            padding: 20px;
-            margin: 20px 0;
-            text-align: center;
-            min-height: 200px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #64748b;
-        }
-
-        .alert-item, .opportunity-item {
+        .opportunity-item {
+            background: #f0fdf4;
+            border-left: 4px solid #16a34a;
             padding: 20px;
             border-radius: 8px;
             margin-bottom: 15px;
-            border-left: 4px solid;
-        }
-
-        .alert-item {
-            background: #fef2f2;
-            border-left-color: #dc2626;
-        }
-
-        .alert-item.yesterday {
-            background: #fff7ed;
-            border-left-color: #ea580c;
-        }
-
-        .alert-item.trend {
-            background: #fef3c7;
-            border-left-color: #f59e0b;
-        }
-
-        .opportunity-item {
-            background: #f0fdf4;
-            border-left-color: #16a34a;
         }
 
         .item-header {
@@ -445,7 +392,6 @@
                 font-size: 1.2em;
             }
             
-            /* Mobile-friendly table replacement */
             .data-table {
                 display: none;
             }
@@ -495,7 +441,6 @@
                 text-align: right;
             }
             
-            /* Mobile daily performance cards */
             .daily-cards-mobile {
                 display: grid;
                 grid-template-columns: 1fr;
@@ -504,12 +449,6 @@
             
             .daily-cards-desktop {
                 display: none;
-            }
-            
-            /* Mobile alerts and opportunities */
-            .alert-item, .opportunity-item {
-                padding: 15px;
-                margin-bottom: 12px;
             }
             
             .item-header {
@@ -527,18 +466,12 @@
                 padding: 12px;
             }
             
-            /* Mobile waste analysis */
             .waste-mobile-cards {
                 display: block;
             }
             
             .waste-desktop-table {
                 display: none;
-            }
-            
-            /* Mobile insights */
-            .mobile-insights {
-                font-size: 0.9em;
             }
             
             .mobile-insights > div {
@@ -604,8 +537,8 @@
         <div class="executive-summary">
             <h2>🎯 7-Day Executive Summary</h2>
             <p id="executive-text">
-                Over the past 7 days: <strong>$1,122.56 total spend</strong> driving <strong>47 conversions</strong> at <strong>$23.88 average CPA</strong>. 
-                Yesterday had some challenges with <strong>$164.87 in detected waste</strong>, but weekly trends show strong performance. 
+                Over the past 7 days: <strong>$383.71 total spend</strong> driving <strong>3 conversions</strong> at <strong>$127.90 average CPA</strong>. 
+                Yesterday had some challenges with <strong>$289.66 spend</strong> and <strong>2 conversions</strong>. 
                 AI system took <strong>3 automated actions</strong> to optimize underperforming keywords.
             </p>
         </div>
@@ -614,27 +547,27 @@
         <div class="metrics-grid">
             <div class="metric-card">
                 <div class="period-label">7 Days</div>
-                <div class="metric-value blue" id="total-spend-7d">$1,122.56</div>
+                <div class="metric-value blue" id="total-spend-7d">$383.71</div>
                 <div class="metric-label">Total Spend</div>
                 <div class="metric-change neutral">📊 Within budget</div>
             </div>
             <div class="metric-card">
                 <div class="period-label">7 Days</div>
-                <div class="metric-value green" id="total-conversions-7d">47</div>
+                <div class="metric-value red" id="total-conversions-7d">3</div>
                 <div class="metric-label">Total Conversions</div>
-                <div class="metric-change up">📈 +34% vs prior week</div>
+                <div class="metric-change down">📉 Needs improvement</div>
             </div>
             <div class="metric-card">
                 <div class="period-label">7 Days</div>
-                <div class="metric-value orange" id="avg-cpa-7d">$23.88</div>
+                <div class="metric-value red" id="avg-cpa-7d">$127.90</div>
                 <div class="metric-label">Average CPA</div>
-                <div class="metric-change down">📉 -75% vs target</div>
+                <div class="metric-change down">📉 Above target</div>
             </div>
             <div class="metric-card">
                 <div class="period-label">7 Days</div>
-                <div class="metric-value green" id="conversion-rate-7d">12.38%</div>
+                <div class="metric-value orange" id="conversion-rate-7d">15.00%</div>
                 <div class="metric-label">Conversion Rate</div>
-                <div class="metric-change up">📈 Strong performance</div>
+                <div class="metric-change neutral">📊 Tracking</div>
             </div>
         </div>
 
@@ -772,41 +705,6 @@
             </div>
         </div>
 
-        <!-- Smart Alerts (7-Day Context) -->
-        <div class="section">
-            <div class="section-header">
-                <h2>🧠 Smart Alerts (7-Day Analysis)</h2>
-            </div>
-            
-            <div class="alert-item trend" id="trending-alert">
-                <div class="item-header">
-                    <div class="item-title">Trending Issue: Sparrow_Search_Cat Performance Declining</div>
-                    <div class="item-meta">3-Day Pattern</div>
-                </div>
-                <div class="item-description">
-                    This campaign has had poor performance for 3 of the last 4 days. Yesterday's $148.56 spend with 0 conversions continues a concerning trend.
-                </div>
-                <div class="recommended-action">
-                    <div class="action-label">💡 Recommended Action:</div>
-                    Review keyword targeting and landing page relevance. Consider pausing if today shows similar results.
-                </div>
-            </div>
-
-            <div class="alert-item yesterday" id="waste-alert">
-                <div class="item-header">
-                    <div class="item-title">Yesterday Spike: Higher Than Normal Waste</div>
-                    <div class="item-meta">Single Day Issue</div>
-                </div>
-                <div class="item-description">
-                    $164.87 in waste yesterday is 3x higher than weekly average of $52/day. Specific terms: "legal lawyer nearby", "employment lawyer", "free consultation employment lawyer".
-                </div>
-                <div class="recommended-action">
-                    <div class="action-label">💡 Recommended Action:</div>
-                    Add these negative keywords: "legal lawyer nearby", "employment lawyer", "free consultation employment lawyer". AI already reduced bids automatically.
-                </div>
-            </div>
-        </div>
-
         <!-- High-Value Opportunities -->
         <div class="section">
             <div class="section-header">
@@ -843,15 +741,15 @@
 
             <div class="opportunity-item">
                 <div class="item-header">
-                    <div class="item-title">Optimize Sparrow_Search_Ger Success</div>
+                    <div class="item-title">Optimize Sparrow_Search_General Success</div>
                     <div class="item-meta">Growth Potential: +$800/month</div>
                 </div>
                 <div class="item-description">
-                    Sparrow_Search_Ger campaign delivered 3 conversions at $32.12 CPA yesterday - significantly outperforming Sparrow_Search_Cat's 0 conversions.
+                    Sparrow_Search_General campaign delivered 1 conversion at $98.78 CPA yesterday but has excellent 7-day performance at $8.22 average CPA.
                 </div>
                 <div class="recommended-action">
                     <div class="action-label">💡 Recommended Action:</div>
-                    Shift 25% of budget from underperforming campaigns to Sparrow_Search_Ger. Expand its successful keyword themes.
+                    Shift 25% of budget from underperforming campaigns to General. Expand its successful keyword themes.
                 </div>
             </div>
 
@@ -877,7 +775,7 @@
             </div>
             
             <!-- Desktop Table -->
-            <table class="data-table waste-desktop-table" id="campaign-performance-table">
+            <table class="data-table waste-desktop-table">
                 <thead>
                     <tr>
                         <th>Campaign</th>
@@ -897,9 +795,9 @@
                         <td>$190.88</td>
                         <td>1</td>
                         <td>$190.88</td>
-                        <td>$785.40</td>
-                        <td>6</td>
-                        <td>$130.90</td>
+                        <td>$275.27</td>
+                        <td>2</td>
+                        <td>$137.64</td>
                         <td><span class="status-badge status-warning">High CPA</span></td>
                         <td>Review keywords and reduce bids</td>
                     </tr>
@@ -908,11 +806,11 @@
                         <td>$98.78</td>
                         <td>1</td>
                         <td>$98.78</td>
-                        <td>$337.16</td>
-                        <td>41</td>
-                        <td>$8.22</td>
-                        <td><span class="status-badge status-success">Strong Weekly</span></td>
-                        <td>Yesterday was anomaly - monitor today</td>
+                        <td>$108.44</td>
+                        <td>1</td>
+                        <td>$108.44</td>
+                        <td><span class="status-badge status-warning">Above Target</span></td>
+                        <td>Monitor performance closely</td>
                     </tr>
                 </tbody>
             </table>
@@ -977,22 +875,6 @@
                     </div>
                 </div>
             </div>
-        </div> style="color: #0c4a6e; margin-bottom: 8px;">📈 Weekly vs Daily Insights</h4>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px; font-size: 0.9em;">
-                    <div>
-                        <strong style="color: #dc2626;">Categories Campaign:</strong>
-                        <br><small>Yesterday's $190.88 CPA much higher than 7-day avg of $130.90</small>
-                    </div>
-                    <div>
-                        <strong style="color: #16a34a;">General Campaign:</strong>
-                        <br><small>Excellent 7-day performance ($8.22 avg) but yesterday spiked to $98.78</small>
-                    </div>
-                    <div>
-                        <strong style="color: #f59e0b;">Pattern Analysis:</strong>
-                        <br><small>General carries most conversions (41 vs 6) but had off day yesterday</small>
-                    </div>
-                </div>
-            </div>
         </div>
 
         <!-- Weekly Waste Analysis -->
@@ -1004,7 +886,7 @@
             <h3 style="margin: 20px 0 15px 0; color: #374151;">Recurring Wasteful Search Terms</h3>
             
             <!-- Desktop Table -->
-            <table class="data-table waste-desktop-table" id="waste-analysis-table">
+            <table class="data-table waste-desktop-table">
                 <thead>
                     <tr>
                         <th>Search Term</th>
@@ -1092,368 +974,262 @@
         // Your Google Sheets configuration
         const SHEET_ID = '1YU8dpDXYzMip8dMRPSMJIwxoN63RsOc4kCQC3gwMMWY';
         
-        // Load enhanced real data from Google Sheets
+        // Load real data from Google Sheets (no demo data)
         async function loadDashboardData() {
             const statusIndicator = document.getElementById('status-indicator');
             
-            statusIndicator.textContent = '🔄 Loading Real 7-Day Data...';
+            statusIndicator.textContent = '🔄 Loading Real Data from Sheets...';
             statusIndicator.style.background = '#ea580c';
             
-            // For now, use realistic sample data that matches your business
-            // TODO: Replace with actual Google Sheets API integration
-            const opportunitiesData = [
-                {
-                    title: 'Scale High-Converting Car Accident Keywords',
-                    description: 'Car accident keywords converting at $31 CPA vs $95 target. Strong 7-day performance pattern with consistent results across multiple campaigns.',
-                    potentialValue: 'Revenue Potential: +$2,400/week',
-                    recommendation: 'Increase budget allocation by 40% to capture more qualified traffic. Expected: 12 additional conversions per week.',
-                    priority: 'High',
-                    status: 'Ready to Implement'
-                },
-                {
-                    title: 'Optimize Dayparting for Monday/Tuesday Peak',
-                    description: 'Data shows 60% higher conversion rates on Monday-Tuesday compared to Thursday-Friday. Current bidding strategy not capitalizing on this pattern.',
-                    potentialValue: 'Scale Potential: +25% conversions',
-                    recommendation: 'Increase bids 25% Mon-Tue, reduce 15% Thu-Fri. Set up automated dayparting rules in Google Ads.',
-                    priority: 'Medium',
-                    status: 'Analysis Complete'
-                },
-                {
-                    title: 'Expand Successful Employment Law Terms',
-                    description: 'Employment law keywords in Sparrow_Search_Ger showing strong performance. Opportunity to scale with related terms and match types.',
-                    potentialValue: 'Growth Potential: +$1,800/month',
-                    recommendation: 'Add related long-tail employment law keywords. Test expanded match types for proven converting terms.',
-                    priority: 'Medium',
-                    status: 'Testing Phase'
-                },
-                {
-                    title: 'Reduce Waste from Generic Legal Terms',
-                    description: 'Terms like "legal lawyer nearby" consistently waste budget across multiple days. Pattern analysis shows 0% conversion rate.',
-                    potentialValue: 'Cost Savings: -$400/week',
-                    recommendation: 'Add comprehensive negative keyword list. AI already reduced bids - consider pausing entirely.',
-                    priority: 'High',
-                    status: 'AI Optimizing'
-                }
-            ];
-            
-            // Direct real data from your enhanced Google Sheets
-            const realData = {
-                // Real 7-day totals (extracted from your sheets)
-                totalSpend7d: '$1,122.56',
-                totalConversions7d: 47,
-                avgCpa7d: '$23.88',
-                conversionRate7d: '12.38%',
+            try {
+                // Fetch real data from multiple sheets
+                const summaryData = await fetchSheetData('Summary');
+                const dailyTrendsData = await fetchSheetData('Daily_Trends');
+                const campaignData = await fetchSheetData('Campaign_Performance');
+                const wasteData = await fetchSheetData('Waste_Analysis');
                 
-                // Real yesterday data
-                yesterdaySpend: '$164.87',
-                yesterdayConversions: 3,
-                yesterdayAvgCpa: '$54.96',
-                
-                // Real campaign performance (from your "Yesterday's Performance" section)
-                campaigns: [
-                    { 
-                        name: 'Sparrow_Search_Cat', 
-                        spend: '$148.56', 
-                        conversions: '0', 
-                        cpa: 'N/A', 
-                        status: 'Alert', 
-                        context: '8 conversions/week normally', 
-                        action: 'Monitor closely - trending issue' 
-                    },
-                    { 
-                        name: 'Sparrow_Search_Ger', 
-                        spend: '$96.37', 
-                        conversions: '3', 
-                        cpa: '$32.12', 
-                        status: 'Converting', 
-                        context: '18 conversions/week', 
-                        action: 'Continue - performing well' 
-                    }
-                ],
-                
-                // Real automated actions (from your Real-Time Monitor)
-                automatedActions: [
-                    { 
-                        action: 'bid_decrease', 
-                        target: 'legal lawyer nearby', 
-                        details: '0 conversions detected, bid reduced by 50%', 
-                        result: '✅ SUCCESS', 
-                        confidence: '90%',
-                        time: '7:10:31 PM'
-                    },
-                    { 
-                        action: 'bid_decrease', 
-                        target: 'employment lawyer', 
-                        details: '0 conversions detected, bid reduced by 50%', 
-                        result: '✅ SUCCESS', 
-                        confidence: '90%',
-                        time: '7:10:32 PM'
-                    },
-                    { 
-                        action: 'bid_decrease', 
-                        target: 'free consultation employment lawyer', 
-                        details: '0 conversions detected, bid reduced by 50%', 
-                        result: '✅ SUCCESS', 
-                        confidence: '90%',
-                        time: '7:10:33 PM'
-                    }
-                ],
-                
-                // Growth Opportunities (realistic data based on your business)
-                growthOpportunities: opportunitiesData
-            };
-            
-            console.log('Loading dashboard with enhanced realistic data:', realData);
-            
-            renderRealDashboard(realData);
-            statusIndicator.textContent = '🤖 Real 7-Day Data Connected';
-            statusIndicator.style.background = '#22c55e';
-            
-            console.log('Enhanced realistic data loaded - based on actual patterns');
-        }
-
-        // Fetch Growth Opportunities from Google Sheets
-        async function fetchGrowthOpportunities() {
-            const sheetId = '1YU8dpDXYzMip8dMRPSMJIwxoN63RsOc4kCQC3gwMMWY';
-            const gid = '453919302'; // Growth Opportunities sheet
-            
-            // Try multiple methods to fetch the data
-            const urls = [
-                `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv&gid=${gid}`,
-                `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&gid=${gid}`
-            ];
-            
-            for (const url of urls) {
-                try {
-                    console.log('Attempting to fetch from:', url);
-                    const response = await fetch(url, {
-                        mode: 'cors',
-                        credentials: 'omit'
-                    });
-                    
-                    if (!response.ok) {
-                        throw new Error(`HTTP ${response.status}`);
-                    }
-                    
-                    const csvText = await response.text();
-                    console.log('Raw CSV response:', csvText.substring(0, 200));
-                    
-                    if (!csvText || csvText.trim() === '') {
-                        throw new Error('Empty response');
-                    }
-                    
-                    // Parse CSV data
-                    const lines = csvText.split('\n').filter(line => line.trim());
-                    const opportunities = [];
-                    
-                    console.log('CSV lines found:', lines.length);
-                    
-                    // Skip header row, process data rows
-                    for (let i = 1; i < lines.length; i++) {
-                        const line = lines[i].trim();
-                        if (line) {
-                            // Handle CSV parsing more carefully
-                            const cols = parseCSVLine(line);
-                            
-                            if (cols.length >= 4) {
-                                opportunities.push({
-                                    title: cols[0] || `Opportunity ${i}`,
-                                    description: cols[1] || 'Analysis in progress...',
-                                    potentialValue: cols[2] || 'TBD',
-                                    recommendation: cols[3] || 'Review recommended',
-                                    priority: cols[4] || 'Medium',
-                                    status: cols[5] || 'Active'
-                                });
-                            }
-                        }
-                    }
-                    
-                    console.log('Parsed opportunities:', opportunities);
-                    
-                    if (opportunities.length > 0) {
-                        return opportunities;
-                    }
-                } catch (error) {
-                    console.error(`Error with URL ${url}:`, error);
-                    continue; // Try next URL
-                }
-            }
-            
-            // If all methods fail, return sample data based on your sheet
-            console.log('All fetch methods failed, using fallback data');
-            return [
-                {
-                    title: 'Scale High-Converting Car Accident Keywords',
-                    description: 'Car accident keywords converting at $31 CPA vs $95 target. Strong 7-day performance pattern with consistent results.',
-                    potentialValue: 'Revenue Potential: +$2,400/week',
-                    recommendation: 'Increase budget allocation by 40% to capture more qualified traffic. Expected: 12 additional conversions per week.',
-                    priority: 'High',
-                    status: 'Ready to Implement'
-                },
-                {
-                    title: 'Optimize Dayparting for Monday/Tuesday Peak',
-                    description: 'Data shows 60% higher conversion rates on Monday-Tuesday. Current bidding strategy not capitalizing on this pattern.',
-                    potentialValue: 'Scale Potential: +25% conversions',
-                    recommendation: 'Increase bids 25% Mon-Tue, reduce 15% Thu-Fri. Set up automated dayparting rules.',
-                    priority: 'Medium',
-                    status: 'Analysis Complete'
-                },
-                {
-                    title: 'Expand Successful Employment Law Terms',
-                    description: 'Employment law keywords showing strong performance in Sparrow_Search_Ger campaign. Opportunity to scale.',
-                    potentialValue: 'Growth Potential: +$1,800/month',
-                    recommendation: 'Add related long-tail employment law keywords. Test expanded match types for proven terms.',
-                    priority: 'Medium',
-                    status: 'Testing Phase'
-                }
-            ];
-        }
-
-        // Helper function to parse CSV lines properly
-        function parseCSVLine(line) {
-            const result = [];
-            let current = '';
-            let inQuotes = false;
-            
-            for (let i = 0; i < line.length; i++) {
-                const char = line[i];
-                
-                if (char === '"') {
-                    inQuotes = !inQuotes;
-                } else if (char === ',' && !inQuotes) {
-                    result.push(current.trim());
-                    current = '';
+                if (summaryData && summaryData.length > 0) {
+                    const realData = parseSheetData(summaryData, dailyTrendsData, campaignData, wasteData);
+                    renderRealDashboard(realData);
+                    statusIndicator.textContent = '🤖 Live Data Connected';
+                    statusIndicator.style.background = '#22c55e';
                 } else {
-                    current += char;
+                    throw new Error('No data found in sheets');
+                }
+                
+            } catch (error) {
+                console.error('Error loading data:', error);
+                statusIndicator.textContent = '⚠️ Data Error - Check Sheets';
+                statusIndicator.style.background = '#dc2626';
+                
+                // Show error message to user
+                showDataError();
+            }
+        }
+
+        // Fetch data from specific Google Sheet
+        async function fetchSheetData(sheetName) {
+            const sheetId = '1YU8dpDXYzMip8dMRPSMJIwxoN63RsOc4kCQC3gwMMWY';
+            const csvUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${sheetName}`;
+            
+            try {
+                const response = await fetch(csvUrl);
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                
+                const csvText = await response.text();
+                return parseCSV(csvText);
+            } catch (error) {
+                console.error(`Error fetching ${sheetName}:`, error);
+                return null;
+            }
+        }
+
+        // Parse CSV data into usable format
+        function parseCSV(csvText) {
+            const lines = csvText.trim().split('\n');
+            const data = [];
+            
+            for (let i = 1; i < lines.length; i++) { // Skip header
+                const line = lines[i].trim();
+                if (line) {
+                    // Handle quoted CSV values
+                    const values = line.split(',').map(val => 
+                        val.replace(/^"|"$/g, '').trim()
+                    );
+                    data.push(values);
                 }
             }
             
-            result.push(current.trim());
-            return result.map(item => item.replace(/^"|"$/g, ''));
+            return data;
         }
 
-        // Fallback demo data loader
-        function loadDemoData() {
-            const demoData = {
-                totalSpend7d: '$1,122.56',
-                totalConversions7d: 47,
-                avgCpa7d: '$23.88',
-                conversionRate7d: '12.38%',
-                yesterdaySpend: '$164.87',
-                yesterdayConversions: 3,
-                yesterdayAvgCpa: '$54.96',
-                campaigns: [
-                    { name: 'Sparrow_Search_Cat', spend: '$148.56', conversions: '0', cpa: 'N/A', status: 'Alert', context: '8 conversions/week normally', action: 'Monitor closely - trending issue' },
-                    { name: 'Sparrow_Search_Ger', spend: '$96.37', conversions: '3', cpa: '$32.12', status: 'Converting', context: '18 conversions/week', action: 'Continue - performing well' }
-                ],
-                automatedActions: [
-                    { action: 'bid_decrease', target: 'legal lawyer nearby', details: '0 conversions detected, bid reduced by 50%', result: '✅ SUCCESS', confidence: '90%', time: '7:10:31 PM' }
-                ],
-                growthOpportunities: [
-                    {
-                        title: 'Car Accident Keywords Outperforming',
-                        description: 'Car accident related keywords have converted at $31 average CPA for 6 of the last 7 days, significantly outperforming your $95 target.',
-                        potentialValue: '+$2,400/week',
-                        recommendation: 'Increase budget allocation to car accident campaigns by 40%. Expected: 12 additional conversions per week.',
-                        priority: 'High',
-                        status: 'Active'
-                    }
-                ]
-            };
+        // Parse all sheet data into dashboard format
+        function parseSheetData(summaryData, dailyTrendsData, campaignData, wasteData) {
+            // Extract summary metrics (assuming format: Metric, Value)
+            const summary = {};
+            summaryData.forEach(row => {
+                if (row.length >= 2) {
+                    summary[row[0]] = row[1];
+                }
+            });
             
-            renderRealDashboard(demoData);
-        }
+            // Extract daily trends (Date, Day, Spend, Conversions, CPA, Performance)
+            const dailyTrends = dailyTrendsData ? dailyTrendsData.map(row => ({
+                date: row[0],
+                day: row[1],
+                spend: parseFloat(row[2]?.replace('
 
         // Render dashboard with real data
         function renderRealDashboard(data) {
-            console.log('renderRealDashboard called with data:', data);
-            
-            // Update 7-day metrics
             document.getElementById('total-spend-7d').textContent = data.totalSpend7d;
             document.getElementById('total-conversions-7d').textContent = data.totalConversions7d;
             document.getElementById('avg-cpa-7d').textContent = data.avgCpa7d;
             document.getElementById('conversion-rate-7d').textContent = data.conversionRate7d;
             
-            // Update executive summary with real data
             document.getElementById('executive-text').innerHTML = `
                 Over the past 7 days: <strong>${data.totalSpend7d} total spend</strong> driving <strong>${data.totalConversions7d} conversions</strong> at <strong>${data.avgCpa7d} average CPA</strong>. 
                 Yesterday had some challenges with <strong>${data.yesterdaySpend} spend</strong> and <strong>${data.yesterdayConversions} conversions</strong>. 
                 AI system took <strong>${data.automatedActions.length} automated actions</strong> to optimize underperforming keywords.
             `;
-            
-            // Update Growth Opportunities section with real data
-            console.log('About to update Growth Opportunities with:', data.growthOpportunities);
-            updateGrowthOpportunitiesFromSheets(data.growthOpportunities || []);
-            
-            console.log('Dashboard rendering complete');
         }
 
-        // Update Growth Opportunities section with real data from Google Sheets
-        function updateGrowthOpportunitiesFromSheets(opportunities) {
-            // Find the Growth Opportunities section by looking for the specific section
-            const sections = document.querySelectorAll('.section');
-            let opportunitiesSection = null;
-            
-            sections.forEach(section => {
-                const header = section.querySelector('h2');
-                if (header && header.textContent.includes('Growth Opportunities')) {
-                    opportunitiesSection = section;
-                }
-            });
-            
-            if (!opportunitiesSection) {
-                console.error('Could not find Growth Opportunities section');
-                return;
-            }
-            
-            // Find or create the opportunities container
-            let opportunitiesContainer = opportunitiesSection.querySelector('.opportunities-container');
-            if (!opportunitiesContainer) {
-                console.error('Could not find opportunities container');
-                return;
-            }
-            
-            // Clear existing content
-            opportunitiesContainer.innerHTML = '';
-            
-            // Add opportunities
-            if (opportunities && opportunities.length > 0) {
-                opportunities.forEach((opportunity, index) => {
-                    const opportunityElement = document.createElement('div');
-                    opportunityElement.className = 'opportunity-item';
-                    opportunityElement.innerHTML = `
-                        <div class="item-header">
-                            <div class="item-title">${opportunity.title || 'Opportunity ' + (index + 1)}</div>
-                            <div class="item-meta">${opportunity.potentialValue || 'Value TBD'}</div>
-                        </div>
-                        <div class="item-description">
-                            ${opportunity.description || 'Analysis in progress...'}
-                        </div>
-                        <div class="recommended-action">
-                            <div class="action-label">💡 Recommended Action:</div>
-                            ${opportunity.recommendation || 'Review recommended'}
-                        </div>
-                    `;
-                    opportunitiesContainer.appendChild(opportunityElement);
-                });
-                
-                console.log(`Successfully loaded ${opportunities.length} growth opportunities`);
-            } else {
-                // Show message if no opportunities
-                opportunitiesContainer.innerHTML = `
-                    <div class="opportunity-item">
-                        <div class="item-header">
-                            <div class="item-title">No Growth Opportunities Available</div>
-                            <div class="item-meta">Check Data Source</div>
-                        </div>
-                        <div class="item-description">
-                            Unable to load growth opportunities. Please verify your data source and try refreshing.
-                        </div>
-                        <div class="recommended-action">
-                            <div class="action-label">💡 Recommended Action:</div>
-                            Check your spreadsheet configuration and click refresh to try again.
-                        </div>
-                    </div>
-                `;
-            }
+        // Update timestamp
+        function updateTimestamp() {
+            const now = new Date();
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit',
+                timeZoneName: 'short'
+            };
+            document.getElementById('last-updated').textContent = now.toLocaleDateString('en-US', options);
         }
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            updateTimestamp();
+            loadDashboardData();
+        });
+
+        // Auto-refresh every 15 minutes
+        setInterval(loadDashboardData, 15 * 60 * 1000);
+    </script>
+</body>
+</html> , '') || 0),
+                conversions: parseInt(row[3] || 0),
+                cpa: parseFloat(row[4]?.replace('
+
+        // Render dashboard with real data
+        function renderRealDashboard(data) {
+            document.getElementById('total-spend-7d').textContent = data.totalSpend7d;
+            document.getElementById('total-conversions-7d').textContent = data.totalConversions7d;
+            document.getElementById('avg-cpa-7d').textContent = data.avgCpa7d;
+            document.getElementById('conversion-rate-7d').textContent = data.conversionRate7d;
+            
+            document.getElementById('executive-text').innerHTML = `
+                Over the past 7 days: <strong>${data.totalSpend7d} total spend</strong> driving <strong>${data.totalConversions7d} conversions</strong> at <strong>${data.avgCpa7d} average CPA</strong>. 
+                Yesterday had some challenges with <strong>${data.yesterdaySpend} spend</strong> and <strong>${data.yesterdayConversions} conversions</strong>. 
+                AI system took <strong>${data.automatedActions.length} automated actions</strong> to optimize underperforming keywords.
+            `;
+        }
+
+        // Update timestamp
+        function updateTimestamp() {
+            const now = new Date();
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit',
+                timeZoneName: 'short'
+            };
+            document.getElementById('last-updated').textContent = now.toLocaleDateString('en-US', options);
+        }
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            updateTimestamp();
+            loadDashboardData();
+        });
+
+        // Auto-refresh every 15 minutes
+        setInterval(loadDashboardData, 15 * 60 * 1000);
+    </script>
+</body>
+</html> , '') || 0),
+                performance: row[5] || 'Unknown'
+            })) : [];
+            
+            // Extract campaign data
+            const campaigns = campaignData ? campaignData.map(row => ({
+                name: row[0],
+                spendYesterday: row[1],
+                conversionsYesterday: parseInt(row[2] || 0),
+                cpaYesterday: row[3],
+                spend7d: row[4],
+                conversions7d: parseInt(row[5] || 0),
+                cpa7d: row[6],
+                status: row[7],
+                action: row[8]
+            })) : [];
+            
+            // Extract waste data
+            const wasteTerms = wasteData ? wasteData.map(row => ({
+                term: row[0],
+                totalWaste: row[1],
+                daysActive: row[2],
+                action: row[3]
+            })) : [];
+            
+            return {
+                // Summary totals
+                totalSpend7d: summary['Total Spend (7d)'] || '$0.00',
+                totalConversions7d: parseInt(summary['Total Conversions (7d)'] || 0),
+                avgCpa7d: summary['Average CPA (7d)'] || '$0.00',
+                conversionRate7d: summary['Conversion Rate (7d)'] || '0.00%',
+                yesterdaySpend: summary['Yesterday Spend'] || '$0.00',
+                yesterdayConversions: parseInt(summary['Yesterday Conversions'] || 0),
+                yesterdayAvgCpa: summary['Yesterday CPA'] || '$0.00',
+                lastUpdated: summary['Last Updated'] || 'Unknown',
+                
+                // Detailed data
+                dailyTrends: dailyTrends,
+                campaigns: campaigns,
+                wasteTerms: wasteTerms
+            };
+        }
+
+        // Show error message when data can't be loaded
+        function showDataError() {
+            document.getElementById('executive-text').innerHTML = `
+                <strong style="color: #dc2626;">⚠️ Unable to load live data from Google Sheets.</strong><br>
+                Please check that your Google Ads script is running and updating the spreadsheet.<br>
+                <small>Last attempted: ${new Date().toLocaleString()}</small>
+            `;
+        }
+
+        // Render dashboard with real data
+        function renderRealDashboard(data) {
+            document.getElementById('total-spend-7d').textContent = data.totalSpend7d;
+            document.getElementById('total-conversions-7d').textContent = data.totalConversions7d;
+            document.getElementById('avg-cpa-7d').textContent = data.avgCpa7d;
+            document.getElementById('conversion-rate-7d').textContent = data.conversionRate7d;
+            
+            document.getElementById('executive-text').innerHTML = `
+                Over the past 7 days: <strong>${data.totalSpend7d} total spend</strong> driving <strong>${data.totalConversions7d} conversions</strong> at <strong>${data.avgCpa7d} average CPA</strong>. 
+                Yesterday had some challenges with <strong>${data.yesterdaySpend} spend</strong> and <strong>${data.yesterdayConversions} conversions</strong>. 
+                AI system took <strong>${data.automatedActions.length} automated actions</strong> to optimize underperforming keywords.
+            `;
+        }
+
+        // Update timestamp
+        function updateTimestamp() {
+            const now = new Date();
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit',
+                timeZoneName: 'short'
+            };
+            document.getElementById('last-updated').textContent = now.toLocaleDateString('en-US', options);
+        }
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            updateTimestamp();
+            loadDashboardData();
+        });
+
+        // Auto-refresh every 15 minutes
+        setInterval(loadDashboardData, 15 * 60 * 1000);
+    </script>
+</body>
+</html>
