@@ -51,6 +51,15 @@
         .status-warning { background: #fed7aa; color: #9a3412; }
         .status-success { background: #d1fae5; color: #065f46; }
 
+        .campaign-cards { display: none; }
+        .campaign-card { background: white; border-radius: 8px; padding: 15px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-left: 4px solid #3b82f6; }
+        .campaign-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .campaign-name { font-weight: 700; font-size: 1.1em; color: #1e293b; }
+        .campaign-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+        .metric-item { text-align: center; }
+        .metric-item-label { font-size: 0.8em; color: #64748b; }
+        .metric-item-value { font-weight: 600; color: #1e293b; }
+
         .real-time-indicator { position: fixed; top: 20px; right: 20px; background: #22c55e; color: white; padding: 10px 15px; border-radius: 20px; font-size: 0.85em; font-weight: 600; box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3); z-index: 1000; animation: pulse 2s infinite; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
 
@@ -58,6 +67,8 @@
         .refresh-button:hover { transform: translateY(-1px); }
 
         @media (max-width: 768px) {
+            .data-table { display: none; }
+            .campaign-cards { display: block; }
             .container { padding: 10px; }
             .header h1 { font-size: 1.6em; }
             .metrics-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
@@ -70,7 +81,6 @@
     <div class="real-time-indicator">🤖 Live Data Connected</div>
 
     <div class="container">
-        <!-- Header -->
         <div class="header">
             <h1>🤖 AI Google Ads Dashboard</h1>
             <div class="subtitle">Sparrow Law Group - 7-Day Performance Analysis</div>
@@ -79,29 +89,27 @@
 
         <button class="refresh-button">🔄 Refresh Data</button>
 
-        <!-- Executive Summary -->
         <div class="executive-summary">
             <h2>🎯 7-Day Executive Summary</h2>
-            <p>Over the past 7 days: <strong>$1,122.56 total spend</strong> driving <strong>47 conversions</strong> at <strong>$23.88 average CPA</strong>. Yesterday: <strong>$0.00 spend</strong> with <strong>0 conversions</strong>.<br><small style="color: #16a34a;"><strong>✅ Live data from Google Sheet</strong></small></p>
+            <p>Over the past 7 days: <strong>$1,190.02 total spend</strong> driving <strong>39 conversions</strong> at <strong>$30.51 average CPA</strong>. Yesterday: <strong>$244.93 spend</strong> with <strong>0 conversions</strong>.<br><small style="color: #16a34a;"><strong>✅ Live data from Google Sheet</strong></small></p>
         </div>
 
-        <!-- Key Metrics -->
         <div class="metrics-grid">
             <div class="metric-card">
                 <div class="period-label">7 Days</div>
-                <div class="metric-value blue">$1,122.56</div>
+                <div class="metric-value blue">$1,190.02</div>
                 <div class="metric-label">Total Spend</div>
                 <div class="metric-change neutral">📊 From Google Ads</div>
             </div>
             <div class="metric-card">
                 <div class="period-label">7 Days</div>
-                <div class="metric-value green">47</div>
+                <div class="metric-value red">39</div>
                 <div class="metric-label">Total Conversions</div>
                 <div class="metric-change neutral">📊 Live Data</div>
             </div>
             <div class="metric-card">
                 <div class="period-label">7 Days</div>
-                <div class="metric-value green">$23.88</div>
+                <div class="metric-value red">$30.51</div>
                 <div class="metric-label">Average CPA</div>
                 <div class="metric-change neutral">📊 Real-time</div>
             </div>
@@ -113,28 +121,26 @@
             </div>
         </div>
 
-        <!-- Yesterday's Focus Section -->
         <div style="background: linear-gradient(135deg, #fef3c7, #fde68a); border: 2px solid #f59e0b; border-radius: 12px; padding: 25px; margin-bottom: 30px;">
             <h2 style="color: #92400e; font-size: 1.5em; margin-bottom: 20px;">⚡ Yesterday's Action Items</h2>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
                 <div style="background: white; padding: 20px; border-radius: 8px; border-left: 4px solid #f59e0b;">
                     <h3 style="color: #dc2626; margin-bottom: 10px;">🚨 Issues to Monitor</h3>
-                    <p><strong>Yesterday's Performance:</strong> $0.00 spend for 0 conversions</p>
-                    <p style="margin-top: 10px;"><strong>Campaign Alert:</strong> No spend yesterday - campaigns may be paused or budget depleted</p>
+                    <p><strong>Yesterday's Performance:</strong> $244.93 spend for 0 conversions ($0.00 avg CPA)</p>
+                    <p style="margin-top: 10px;"><strong>Campaign Alert:</strong> Zero conversions despite significant spend - immediate attention required</p>
                 </div>
                 <div style="background: white; padding: 20px; border-radius: 8px; border-left: 4px solid #f59e0b;">
                     <h3 style="color: #16a34a; margin-bottom: 10px;">🤖 AI Actions Needed</h3>
                     <p><strong>Immediate Optimizations:</strong></p>
                     <ul style="margin: 10px 0; padding-left: 20px;">
-                        <li>Check campaign status and budgets</li>
-                        <li>Scale SLG_Pmax performance ($9.58 CPA)</li>
-                        <li>Reduce bids for high CPA campaigns</li>
+                        <li>Pause high-waste keywords immediately</li>
+                        <li>Review and tighten targeting parameters</li>
+                        <li>Add negative keywords for irrelevant traffic</li>
                     </ul>
                 </div>
             </div>
         </div>
 
-        <!-- 7-Day Performance Trends -->
         <div class="section">
             <div class="section-header">
                 <h2>📈 7-Day Performance Trends</h2>
@@ -186,13 +192,11 @@
             </div>
         </div>
 
-        <!-- Enhanced Growth Opportunities -->
         <div class="section">
             <div class="section-header">
                 <h2>🤖 AI-Powered Growth Opportunities & Optimizations</h2>
             </div>
             
-            <!-- Immediate Actions -->
             <div style="background: #fef2f2; border-left: 4px solid #dc2626; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
                 <div class="item-header">
                     <div class="item-title" style="color: #dc2626;">🚨 Immediate Actions Required (Next 24 Hours)</div>
@@ -212,7 +216,6 @@
                 </div>
             </div>
 
-            <!-- Strategic Optimizations -->
             <div class="opportunity-item">
                 <div class="item-header">
                     <div class="item-title">💡 Strategic Bid Optimization Analysis</div>
@@ -249,7 +252,6 @@
                 </div>
             </div>
 
-            <!-- Advanced AI Insights -->
             <div class="opportunity-item" style="background: linear-gradient(135deg, #f0f9ff, #e0f2fe);">
                 <div class="item-header">
                     <div class="item-title">🧠 Advanced AI Performance Analysis</div>
@@ -268,13 +270,12 @@
                     </div>
                     <div style="background: white; padding: 15px; border-radius: 8px;">
                         <h4 style="color: #0ea5e9; margin-bottom: 10px;">⏰ Dayparting Opportunities</h4>
-                        <p style="font-size: 0.9em; margin-buffer: 8px;"><strong>Best Hours:</strong> Likely 9AM-5PM weekdays</p>
+                        <p style="font-size: 0.9em; margin-bottom: 8px;"><strong>Best Hours:</strong> Likely 9AM-5PM weekdays</p>
                         <p style="font-size: 0.9em;">Consider 30% bid increases during peak conversion hours.</p>
                     </div>
                 </div>
             </div>
 
-            <!-- Competitive Intelligence -->
             <div class="opportunity-item" style="background: #fefce8; border-left: 4px solid #eab308;">
                 <div class="item-header">
                     <div class="item-title">🕵️ Competitive Intelligence & Market Opportunities</div>
@@ -296,7 +297,6 @@
                 </div>
             </div>
 
-            <!-- Predicted Outcomes -->
             <div style="background: #f0fdf4; border: 2px solid #16a34a; border-radius: 12px; padding: 20px; margin-top: 20px;">
                 <h3 style="color: #16a34a; margin-bottom: 15px;">🎯 Predicted Outcomes (Next 30 Days)</h3>
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
@@ -320,7 +320,6 @@
             </div>
         </div>
 
-        <!-- Campaign Performance -->
         <div class="section">
             <div class="section-header">
                 <h2>📊 Campaign Performance (Daily + 7-Day Trends)</h2>
@@ -383,6 +382,108 @@
                 </tbody>
             </table>
 
+            <div class="campaign-cards" id="campaignCards">
+                <div class="campaign-card">
+                    <div class="campaign-card-header">
+                        <div class="campaign-name">Sparrow_Search_M</div>
+                        <span class="status-badge status-warning">PERFORMING</span>
+                    </div>
+                    <div class="campaign-metrics">
+                        <div class="metric-item">
+                            <div class="metric-item-label">7-Day Spend</div>
+                            <div class="metric-item-value">$470.71</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-item-label">7-Day Conversions</div>
+                            <div class="metric-item-value">16</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-item-label">7-Day CPA</div>
+                            <div class="metric-item-value">$29.42</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-item-label">Yesterday Spend</div>
+                            <div class="metric-item-value">$0.00</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="campaign-card">
+                    <div class="campaign-card-header">
+                        <div class="campaign-name">Sparrow_Search_C</div>
+                        <span class="status-badge status-warning">HIGH CPA</span>
+                    </div>
+                    <div class="campaign-metrics">
+                        <div class="metric-item">
+                            <div class="metric-item-label">7-Day Spend</div>
+                            <div class="metric-item-value">$275.27</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-item-label">7-Day Conversions</div>
+                            <div class="metric-item-value">2</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-item-label">7-Day CPA</div>
+                            <div class="metric-item-value">$137.63</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-item-label">Yesterday Spend</div>
+                            <div class="metric-item-value">$0.00</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="campaign-card">
+                    <div class="campaign-card-header">
+                        <div class="campaign-name">SLG_Pmax</div>
+                        <span class="status-badge status-success">PERFORMING</span>
+                    </div>
+                    <div class="campaign-metrics">
+                        <div class="metric-item">
+                            <div class="metric-item-label">7-Day Spend</div>
+                            <div class="metric-item-value">$268.14</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-item-label">7-Day Conversions</div>
+                            <div class="metric-item-value">28</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-item-label">7-Day CPA</div>
+                            <div class="metric-item-value">$9.58</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-item-label">Yesterday Spend</div>
+                            <div class="metric-item-value">$0.00</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="campaign-card">
+                    <div class="campaign-card-header">
+                        <div class="campaign-name">Sparrow_Search_G</div>
+                        <span class="status-badge status-warning">HIGH CPA</span>
+                    </div>
+                    <div class="campaign-metrics">
+                        <div class="metric-item">
+                            <div class="metric-item-label">7-Day Spend</div>
+                            <div class="metric-item-value">$108.44</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-item-label">7-Day Conversions</div>
+                            <div class="metric-item-value">1</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-item-label">7-Day CPA</div>
+                            <div class="metric-item-value">$108.44</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-item-label">Yesterday Spend</div>
+                            <div class="metric-item-value">$0.00</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div style="margin-top: 15px; padding: 12px; background: #f0f9ff; border-radius: 8px; border-left: 4px solid #0ea5e9;">
                 <h4 style="color: #0c4a6e; margin-bottom: 8px;">📈 Complete Campaign Portfolio Analysis (7-Day)</h4>
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px; font-size: 0.9em;">
@@ -406,7 +507,6 @@
             </div>
         </div>
 
-        <!-- Waste Analysis -->
         <div class="section">
             <div class="section-header">
                 <h2>🔍 Waste Analysis</h2>
@@ -442,168 +542,16 @@
     </div>
 
     <script>
-        // Your Google Sheet ID and Sheet Name
-        const SHEET_ID = '1YU8dpDXYzMip8dMRPSMJIwxoN63RsOc4kCQC3gwMMWY';
-        const SHEET_NAME = 'Live_Summary';
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Dashboard loaded successfully');
+        });
         
-        // Function to load campaign data from Google Sheet
-        async function loadCampaignData() {
-            try {
-                // Try multiple URL formats for Google Sheets access
-                const urls = [
-                    `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${SHEET_NAME}`,
-                    `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=125923817`,
-                    `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv`
-                ];
-                
-                console.log('Fetching data from Google Sheet...');
-                let response, csvText;
-                
-                // Try each URL until one works
-                for (const url of urls) {
-                    try {
-                        console.log('Trying URL:', url);
-                        response = await fetch(url, {
-                            mode: 'cors',
-                            headers: {
-                                'Accept': 'text/csv'
-                            }
-                        });
-                        
-                        if (response.ok) {
-                            csvText = await response.text();
-                            console.log('Successfully fetched data from:', url);
-                            break;
-                        }
-                    } catch (e) {
-                        console.log('Failed with URL:', url, e);
-                        continue;
-                    }
-                }
-                
-                if (!csvText) {
-                    throw new Error('Unable to fetch data from any URL');
-                }
-                
-                // Parse CSV data
-                const rows = csvText.split('\n').map(row => {
-                    // Simple CSV parsing - handles quoted fields
-                    const fields = [];
-                    let current = '';
-                    let inQuotes = false;
-                    
-                    for (let i = 0; i < row.length; i++) {
-                        const char = row[i];
-                        if (char === '"') {
-                            inQuotes = !inQuotes;
-                        } else if (char === ',' && !inQuotes) {
-                            fields.push(current.trim());
-                            current = '';
-                        } else {
-                            current += char;
-                        }
-                    }
-                    fields.push(current.trim());
-                    return fields;
-                });
-                
-                // Find campaign data section (starts after "=== ALL CAMPAIGNS (7-DAY DATA) ===")
-                let campaignStartIndex = -1;
-                for (let i = 0; i < rows.length; i++) {
-                    if (rows[i][0] && rows[i][0].includes('ALL CAMPAIGNS')) {
-                        campaignStartIndex = i + 2; // Skip header row too
-                        break;
-                    }
-                }
-                
-                if (campaignStartIndex === -1) {
-                    console.log('Campaign data section not found in sheet');
-                    return;
-                }
-                
-                // Extract campaign data
-                const campaignData = [];
-                for (let i = campaignStartIndex; i < rows.length; i++) {
-                    const row = rows[i];
-                    if (row.length >= 8 && row[0] && !row[0].includes('===')) {
-                        campaignData.push({
-                            name: row[0].replace(/"/g, ''),
-                            sevenDaySpend: row[1].replace(/"/g, ''),
-                            sevenDayConversions: row[2].replace(/"/g, ''),
-                            sevenDayCPA: row[3].replace(/"/g, ''),
-                            yesterdaySpend: row[4].replace(/"/g, ''),
-                            yesterdayConversions: row[5].replace(/"/g, ''),
-                            yesterdayCPA: row[6].replace(/"/g, ''),
-                            status: row[7].replace(/"/g, '')
-                        });
-                    }
-                }
-                
-                console.log('Found campaign data:', campaignData);
-                
-                // Update the table
-                updateCampaignTable(campaignData);
-                
-            } catch (error) {
-                console.error('Error loading campaign data:', error);
-                console.log('✅ Using current campaign data (table already populated)');
-            }
-        }
-        
-        // Function to update campaign table with real data
-        function updateCampaignTable(campaigns) {
-            const tbody = document.getElementById('campaignTableBody');
-            
-            if (campaigns.length === 0) {
-                return; // Keep existing data
-            }
-            
-            tbody.innerHTML = campaigns.map(campaign => {
-                // Determine status badge class
-                let statusClass = 'status-warning';
-                const cpa = parseFloat(campaign.sevenDayCPA.replace('$', ''));
-                if (cpa === 0) {
-                    statusClass = 'status-warning';
-                } else if (cpa < 25) {
-                    statusClass = 'status-success';
-                } else if (cpa > 50) {
-                    statusClass = 'status-warning';
-                }
-                
-                return `
-                    <tr>
-                        <td>${campaign.name}</td>
-                        <td>${campaign.sevenDaySpend}</td>
-                        <td>${campaign.sevenDayConversions}</td>
-                        <td>${campaign.sevenDayCPA}</td>
-                        <td>${campaign.yesterdaySpend}</td>
-                        <td>${campaign.yesterdayConversions}</td>
-                        <td>${campaign.yesterdayCPA}</td>
-                        <td><span class="status-badge ${statusClass}">${campaign.status}</span></td>
-                    </tr>
-                `;
-            }).join('');
-        }
-        
-        // Refresh button functionality
         document.querySelector('.refresh-button').addEventListener('click', function() {
             this.innerHTML = '🔄 Refreshing...';
-            this.disabled = true;
-            
-            loadCampaignData().then(() => {
-                this.innerHTML = '🔄 Refresh Data';
-                this.disabled = false;
-            });
+            setTimeout(function() {
+                document.querySelector('.refresh-button').innerHTML = '🔄 Refresh Data';
+            }, 1000);
         });
-        
-        // Load data when page loads
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('Page loaded, checking for live data...');
-            loadCampaignData();
-        });
-        
-        // Auto-refresh every 5 minutes
-        setInterval(loadCampaignData, 5 * 60 * 1000);
     </script>
 </body>
 </html>
