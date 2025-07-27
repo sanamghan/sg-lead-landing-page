@@ -51,11 +51,11 @@
         .status-warning { background: #fed7aa; color: #9a3412; }
         .status-success { background: #d1fae5; color: #065f46; }
 
-        .campaign-cards { display: none; }
-        .campaign-card { background: white; border-radius: 8px; padding: 15px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-left: 4px solid #3b82f6; }
-        .campaign-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-        .campaign-name { font-weight: 700; font-size: 1.1em; color: #1e293b; }
-        .campaign-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+        .campaign-cards, .waste-cards { display: none; }
+        .campaign-card, .waste-card { background: white; border-radius: 8px; padding: 15px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-left: 4px solid #3b82f6; }
+        .campaign-card-header, .waste-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .campaign-name, .waste-term { font-weight: 700; font-size: 1.1em; color: #1e293b; }
+        .campaign-metrics, .waste-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
         .metric-item { text-align: center; }
         .metric-item-label { font-size: 0.8em; color: #64748b; }
         .metric-item-value { font-weight: 600; color: #1e293b; }
@@ -68,7 +68,7 @@
 
         @media (max-width: 768px) {
             .data-table { display: none; }
-            .campaign-cards { display: block; }
+            .campaign-cards, .waste-cards { display: block; }
             .container { padding: 10px; }
             .header h1 { font-size: 1.6em; }
             .metrics-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
@@ -512,6 +512,7 @@
                 <h2>🔍 Waste Analysis</h2>
             </div>
             
+            <!-- Desktop Table -->
             <table class="data-table">
                 <thead>
                     <tr>
@@ -538,6 +539,60 @@
                     </tr>
                 </tbody>
             </table>
+
+            <!-- Mobile Cards -->
+            <div class="waste-cards">
+                <div class="waste-card">
+                    <div class="waste-card-header">
+                        <div class="waste-term">"legal lawyer nearby"</div>
+                        <span class="status-badge status-warning">Add negative keyword</span>
+                    </div>
+                    <div class="waste-metrics">
+                        <div class="metric-item">
+                            <div class="metric-item-label">Total Waste</div>
+                            <div class="metric-item-value">$47.25</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-item-label">Priority</div>
+                            <div class="metric-item-value">High</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="waste-card">
+                    <div class="waste-card-header">
+                        <div class="waste-term">"employment lawyer"</div>
+                        <span class="status-badge status-warning">Monitor and reduce bids</span>
+                    </div>
+                    <div class="waste-metrics">
+                        <div class="metric-item">
+                            <div class="metric-item-label">Total Waste</div>
+                            <div class="metric-item-value">$34.80</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-item-label">Priority</div>
+                            <div class="metric-item-value">Medium</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="waste-card">
+                    <div class="waste-card-header">
+                        <div class="waste-term">"free consultation employment lawyer"</div>
+                        <span class="status-badge status-warning">Add negative keyword</span>
+                    </div>
+                    <div class="waste-metrics">
+                        <div class="metric-item">
+                            <div class="metric-item-label">Total Waste</div>
+                            <div class="metric-item-value">$28.15</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-item-label">Priority</div>
+                            <div class="metric-item-value">High</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
