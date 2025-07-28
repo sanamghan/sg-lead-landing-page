@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Dashboard - API Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; line-height: 1.6; }
+        .container { max-width: 1000px; margin: 0 auto; }
+        .test-section { background: #f8f9fa; padding: 20px; margin: 20px 0; border-radius: 8px; border-left: 4px solid #007bff; }
+        .success { border-left-color: #28a745; background: #d4edda; }
+        .error { border-left-color: #dc3545; background: #f8d7da; }
+        .warning { border-left-color: #ffc107; background: #fff3cd; }
+        pre { background: #f1f1f1; padding: 10px; border-radius: 4px; overflow-x: auto; }
+        button { background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; margin: 5px; }
+        button:hover { background: #0056b3; }
+        .status { font-weight: bold; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Sparrow Law Dashboard - Debug Mode</h1>
+        <p>This will help us identify exactly what's wrong with the API connection.</p>
+
+        <button onclick="runAllTests()">🧪 Run All Tests</button>
+        <button onclick="testBasicAPI()">Test API Key</button>
+        <button onclick="testSheetAccess()">Test Sheet Access</button>
+        <button onclick="testSheetStructure()">Test Sheet Structure</button>
+        <button onclick="clearResults()">Clear Results</button>
+
+        <div id="results"></div>
+    </div>
+
+    <script>
+        const SHEET_ID = '1YU8dpDXYzMip8dMRPSMJIwxoN63RsOc4kCQC3gwMMWY';
+        const API_KEY = 'AIzaSyAkot5fE5EkTfB_EMwneh_UkJ0180K97_A';
+
+        function addResult(title, content, type = 'test-section') {
+            const div = document.createElement('div');
+            div.className = type;
+            div.innerHTML = `<div class="status">${title}</div>${content}`;
+            document.getElementById('results').appendChild(div);
+        }
+
+        function clearResults() {
+            document.getElementById('results').innerHTML = '';
+        }
+
+        async function runAllTests() {
+            clearResults();
+            addResult('🚀 Starting comprehensive API tests...', '');
+            
+            await testBasicAPI();
+            await testSheetAccess();
+            await testSheetStructure();
+            await testSpecificSheets();
+        }
+
+        async function testBasicAPI() {
+            try {
+                addResult('🔑 Testing API Key Validity...', 'Checking if API key works...');
+                
+                const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}?key=${API_KEY}`;
+                console.log('Testing URL:', url);
+                
+                const response = await fetch(url);
+                const result = await response.json();
+                
+                if (response.ok) {
+                    addResult('✅ API Key Test: SUCCESS', 
+                        `<strong>Status:</strong> ${response.status}<br>
+                         <strong>Sheet Title:</strong> ${result.properties?.title || 'Unknown'}<br>
+                         <strong>Sheets Found:</strong> ${result.sheets?.length || 0}<br>
+                         <pre>${JSON.stringify(result.sheets?.map(s => s.properties?.title) || [], null, 2)}</pre>`, 
+                        'test-section success');
+                } else {
+                    addResult('❌ API Key Test: FAILED', 
+                        `<strong>Error:</strong> ${response.status} - ${response.statusText}<br>
+                         <strong>Message:</strong> ${result.error?.message || 'Unknown error'}<br>
+                         <pre>${JSON.stringify(result, null, 2)}</pre>`, 
+                        'test-section error');
+                }
+            } catch (error) {
+                addResult('❌ API Key Test: NETWORK ERROR', 
+                    `<strong>Error:</strong> ${error.message}<br>
+                     This could be a CORS issue, network problem, or invalid URL.`, 
+                    'test-section error');
+            }
+        }
+
+        async function testSheetAccess() {
+            try {
+                addResult('📊 Testing Sheet Access...', 'Checking if we can read sheet data...');
+                
+                const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/A1:Z100?key=${API_KEY}`;
+                const response = await fetch(url);
+                const result = await response.json();
+                
+                if (response.ok && result.values) {
+                    addResult('✅ Sheet Access: SUCCESS', 
+                        `<strong>Rows Found:</strong> ${result.values.length}<br>
+                         <strong>First Row:</strong> ${JSON.stringify(result.values[0] || [])}<br>
+                         <strong>Sample Data (first 5 rows):</strong>
+                         <pre>${JSON.stringify(result.values.slice(0, 5), null, 2)}</pre>`, 
+                        'test-section success');
+                } else {
+                    addResult('❌ Sheet Access: FAILED', 
+                        `<strong>Error:</strong> ${response.status}<br>
+                         <strong>Message:</strong> ${result.error?.message || 'No data found'}<br>
+                         <pre>${JSON.stringify(result, null, 2)}</pre>`, 
+                        'test-section error');
+                }
+            } catch (error) {
+                addResult('❌ Sheet Access: ERROR', 
+                    `<strong>Error:</strong> ${error.message}`, 
+                    'test-section error');
+            }
+        }
+
+        async function testSheetStructure() {
+            try {
+                addResult('🔍 Testing Sheet Structure...', 'Looking for campaign data patterns...');
+                
+                const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/A1:H50?key=${API_KEY}`;
+                const response = await fetch(url);
+                const result = await response.json();
+                
+                if (response.ok && result.values) {
+                    let analysis = '<strong>Sheet Structure Analysis:</strong><br>';
+                    
+                    result.values.forEach((row, index) => {
+                        // Look for rows that might contain campaign data
+                        if (row[0] && typeof row[0] === 'string' && row[0].length > 0) {
+                            const hasSpend = row[1] && (row[1].includes('$') || !isNaN(parseFloat(row[1])));
+                            const hasConversions = row[2] && !isNaN(parseInt(row[2]));
+                            
+                            if (hasSpend || hasConversions) {
+                                analysis += `<strong>Row ${index + 1}:</strong> ${JSON.stringify(row)}<br>`;
+                            }
+                        }
+                    });
+                    
+                    addResult('✅ Sheet Structure: ANALYZED', analysis, 'test-section success');
+                } else {
+                    addResult('❌ Sheet Structure: FAILED', 
+                        `Could not analyze structure: ${result.error?.message || 'Unknown error'}`, 
+                        'test-section error');
+                }
+            } catch (error) {
+                addResult('❌ Sheet Structure: ERROR', 
+                    `<strong>Error:</strong> ${error.message}`, 
+                    'test-section error');
+            }
+        }
+
+        async function testSpecificSheets() {
+            const sheetsToTest = ['Live_Summary', 'AdGroup_Performance', 'Daily_Performance', 'Search_Terms'];
+            
+            for (const sheetName of sheetsToTest) {
+                try {
+                    addResult(`📋 Testing Sheet: ${sheetName}...`, 'Checking if this sheet exists and has data...');
+                    
+                    const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${sheetName}!A1:Z20?key=${API_KEY}`;
+                    const response = await fetch(url);
+                    const result = await response.json();
+                    
+                    if (response.ok && result.values) {
+                        addResult(`✅ Sheet "${sheetName}": FOUND`, 
+                            `<strong>Rows:</strong> ${result.values.length}<br>
+                             <strong>Headers:</strong> ${JSON.stringify(result.values[0] || [])}<br>
+                             <strong>Sample Data:</strong>
+                             <pre>${JSON.stringify(result.values.slice(0, 3), null, 2)}</pre>`, 
+                            'test-section success');
+                    } else {
+                        addResult(`⚠️ Sheet "${sheetName}": NOT FOUND`, 
+                            `This sheet doesn't exist or has no data. Error: ${result.error?.message || 'Sheet not found'}`, 
+                            'test-section warning');
+                    }
+                } catch (error) {
+                    addResult(`❌ Sheet "${sheetName}": ERROR`, 
+                        `<strong>Error:</strong> ${error.message}`, 
+                        'test-section error');
+                }
+            }
+        }
+
+        // Auto-run basic test on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            addResult('🎯 Debug Dashboard Loaded', 
+                `<strong>Sheet ID:</strong> ${SHEET_ID}<br>
+                 <strong>API Key:</strong> ${API_KEY.substring(0, 10)}...<br>
+                 <strong>Time:</strong> ${new Date().toLocaleString()}<br>
+                 Click "Run All Tests" to start diagnosis.`);
+        });
+    </script>
+</body>
+</html>
