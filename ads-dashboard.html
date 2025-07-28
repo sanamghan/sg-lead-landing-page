@@ -169,11 +169,147 @@
                 data.adGroups = rows.map(row => ({
                     campaign: row[0] || '',
                     name: row[1] || '',
-                    spend: parseFloat(row[3]?.replace('$', '')) || 0,
+                    spend: parseFloat(row[3]?.replace('
+
+        function updateDisplay() {
+            updateMetrics();
+            updateCampaignTable();
+            updateAdGroupTable();
+        }
+
+        function updateMetrics() {
+            if (!data.campaigns.length) return;
+            
+            const totalSpend = data.campaigns.reduce((sum, c) => sum + c.spend, 0);
+            const totalConversions = data.campaigns.reduce((sum, c) => sum + c.conversions, 0);
+            const avgCPA = totalConversions > 0 ? totalSpend / totalConversions : 0;
+            
+            document.getElementById('totalSpend').textContent = '$' + totalSpend.toFixed(2);
+            document.getElementById('totalConversions').textContent = totalConversions;
+            document.getElementById('avgCPA').textContent = '$' + avgCPA.toFixed(2);
+            
+            document.getElementById('summary').innerHTML = 
+                `Over the past 7 days: <strong>$${totalSpend.toFixed(2)} total spend</strong> driving <strong>${totalConversions} conversions</strong> at <strong>$${avgCPA.toFixed(2)} average CPA</strong>.`;
+        }
+
+        function updateCampaignTable() {
+            const tbody = document.getElementById('campaignTable');
+            if (!data.campaigns.length) return;
+            
+            tbody.innerHTML = '';
+            data.campaigns.forEach(campaign => {
+                const row = tbody.insertRow();
+                const statusClass = campaign.cpa > 100 ? 'status-warning' : 'status-success';
+                row.innerHTML = `
+                    <td>${campaign.name}</td>
+                    <td>$${campaign.spend.toFixed(2)}</td>
+                    <td>${campaign.conversions}</td>
+                    <td>$${campaign.cpa.toFixed(2)}</td>
+                    <td><span class="status-badge ${statusClass}">${campaign.performance}</span></td>
+                `;
+            });
+        }
+
+        function updateAdGroupTable() {
+            const tbody = document.getElementById('adGroupTable');
+            if (!data.adGroups.length) return;
+            
+            tbody.innerHTML = '';
+            data.adGroups.forEach(adGroup => {
+                const row = tbody.insertRow();
+                const statusClass = adGroup.cpa > 100 ? 'status-warning' : 'status-success';
+                row.innerHTML = `
+                    <td>${adGroup.campaign}</td>
+                    <td>${adGroup.name}</td>
+                    <td>$${adGroup.spend.toFixed(2)}</td>
+                    <td>${adGroup.conversions}</td>
+                    <td>$${adGroup.cpa.toFixed(2)}</td>
+                    <td><span class="status-badge ${statusClass}">${adGroup.performance}</span></td>
+                `;
+            });
+        }
+
+        function showError(message) {
+            document.body.insertAdjacentHTML('afterbegin', 
+                `<div style="background: #fee; color: #c00; padding: 10px; text-align: center;">${message}</div>`);
+        }
+
+        document.addEventListener('DOMContentLoaded', loadData);
+    </script>
+</body>
+</html>, '')) || 0,
                     conversions: parseInt(row[4]) || 0,
-                    cpa: parseFloat(row[5]?.replace('$', '')) || 0,
+                    cpa: parseFloat(row[5]?.replace('
+
+        function updateDisplay() {
+            updateMetrics();
+            updateCampaignTable();
+            updateAdGroupTable();
+        }
+
+        function updateMetrics() {
+            if (!data.campaigns.length) return;
+            
+            const totalSpend = data.campaigns.reduce((sum, c) => sum + c.spend, 0);
+            const totalConversions = data.campaigns.reduce((sum, c) => sum + c.conversions, 0);
+            const avgCPA = totalConversions > 0 ? totalSpend / totalConversions : 0;
+            
+            document.getElementById('totalSpend').textContent = '$' + totalSpend.toFixed(2);
+            document.getElementById('totalConversions').textContent = totalConversions;
+            document.getElementById('avgCPA').textContent = '$' + avgCPA.toFixed(2);
+            
+            document.getElementById('summary').innerHTML = 
+                `Over the past 7 days: <strong>$${totalSpend.toFixed(2)} total spend</strong> driving <strong>${totalConversions} conversions</strong> at <strong>$${avgCPA.toFixed(2)} average CPA</strong>.`;
+        }
+
+        function updateCampaignTable() {
+            const tbody = document.getElementById('campaignTable');
+            if (!data.campaigns.length) return;
+            
+            tbody.innerHTML = '';
+            data.campaigns.forEach(campaign => {
+                const row = tbody.insertRow();
+                const statusClass = campaign.cpa > 100 ? 'status-warning' : 'status-success';
+                row.innerHTML = `
+                    <td>${campaign.name}</td>
+                    <td>$${campaign.spend.toFixed(2)}</td>
+                    <td>${campaign.conversions}</td>
+                    <td>$${campaign.cpa.toFixed(2)}</td>
+                    <td><span class="status-badge ${statusClass}">${campaign.performance}</span></td>
+                `;
+            });
+        }
+
+        function updateAdGroupTable() {
+            const tbody = document.getElementById('adGroupTable');
+            if (!data.adGroups.length) return;
+            
+            tbody.innerHTML = '';
+            data.adGroups.forEach(adGroup => {
+                const row = tbody.insertRow();
+                const statusClass = adGroup.cpa > 100 ? 'status-warning' : 'status-success';
+                row.innerHTML = `
+                    <td>${adGroup.campaign}</td>
+                    <td>${adGroup.name}</td>
+                    <td>$${adGroup.spend.toFixed(2)}</td>
+                    <td>${adGroup.conversions}</td>
+                    <td>$${adGroup.cpa.toFixed(2)}</td>
+                    <td><span class="status-badge ${statusClass}">${adGroup.performance}</span></td>
+                `;
+            });
+        }
+
+        function showError(message) {
+            document.body.insertAdjacentHTML('afterbegin', 
+                `<div style="background: #fee; color: #c00; padding: 10px; text-align: center;">${message}</div>`);
+        }
+
+        document.addEventListener('DOMContentLoaded', loadData);
+    </script>
+</body>
+</html>, '')) || 0,
                     performance: row[8] || 'Unknown'
-                })).filter(ag => ag.campaign);
+                })).filter(ag => ag.campaign && ag.spend > 0); // Only show ad groups with spend
             }
         }
 
