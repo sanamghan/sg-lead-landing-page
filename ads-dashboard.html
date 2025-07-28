@@ -338,17 +338,50 @@
             
             try {
                 showLoadingState();
-                await Promise.all([
-                    loadCampaigns(), 
-                    loadAdGroups(), 
-                    loadDailyTrends(), 
-                    loadWasteTerms()
-                ]);
+                
+                // Test API connectivity first
+                console.log('Testing Google Sheets API...');
+                const testUrl = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}?key=${API_KEY}`;
+                const testResponse = await fetch(testUrl);
+                console.log('API Test Response:', testResponse.status, testResponse.statusText);
+                
+                if (!testResponse.ok) {
+                    throw new Error(`API Error: ${testResponse.status} - ${testResponse.statusText}`);
+                }
+                
+                // Load data sequentially for better error tracking
+                console.log('Loading campaigns...');
+                await loadCampaigns();
+                console.log('Campaigns loaded:', data.campaigns.length);
+                
+                console.log('Loading ad groups...');
+                await loadAdGroups();
+                console.log('Ad groups loaded:', data.adGroups.length);
+                
+                console.log('Loading daily trends...');
+                await loadDailyTrends();
+                console.log('Daily trends loaded:', data.dailyTrends.length);
+                
+                console.log('Loading waste terms...');
+                await loadWasteTerms();
+                console.log('Waste terms loaded:', data.wasteTerms.length);
+                
                 updateDisplay();
                 console.log('Data loaded successfully at', data.loadTime);
+                
+                // Show success message
+                showSuccess('✅ Data loaded successfully from Google Sheets!');
+                
             } catch (error) {
                 console.error('Error loading data:', error);
-                showError('Failed to load data: ' + error.message);
+                showError('Failed to load data: ' + error.message + '. Check console for details.');
+                
+                // Show detailed error info
+                document.getElementById('summary').innerHTML = 
+                    `<span style="color: #dc2626;">❌ Error loading data: ${error.message}</span><br>
+                    <small>Sheet ID: ${SHEET_ID}<br>
+                    API Key: ${API_KEY.substring(0, 10)}...<br>
+                    Time: ${new Date().toLocaleString()}</small>`;
             }
         }
 
@@ -609,7 +642,63 @@
         }
 
         async function loadCampaigns() {
+            console.log('Loading campaigns from Live_Summary sheet...');
             const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Live_Summary!A:H?key=${API_KEY}`;
+            console.log('Campaign URL:', url);
+            
+            const response = await fetch(url);
+            console.log('Campaign response status:', response.status);
+            
+            if (!response.ok) {
+                throw new Error(`Campaign HTTP ${response.status}: ${response.statusText}`);
+            }
+            
+            const result = await response.json();
+            console.log('Campaign result:', result);
+            
+            if (result.error) {
+                throw new Error(`Campaign API Error: ${result.error.message}`);
+            }
+            
+            if (result.values && result.values.length > 0) {
+                console.log('Raw campaign data rows:', result.values.length);
+                console.log('First few rows:', result.values.slice(0, 5));
+                
+                // Try different row starting points
+                let startRow = 11;
+                if (result.values.length <= 11) {
+                    startRow = 1; // Start from row 2 if sheet is smaller
+                }
+                
+                const rows = result.values.slice(startRow);
+                console.log('Processing rows from index:', startRow, 'Total rows to process:', rows.length);
+                
+                data.campaigns = rows
+                    .map((row, index) => {
+                        console.log(`Processing campaign row ${index}:`, row);
+                        return {
+                            name: (row[0] || '').trim(),
+                            spend: parseFloat((row[1] || '0').replace(/[$,]/g, '')) || 0,
+                            conversions: parseInt(row[2]) || 0,
+                            cpa: parseFloat((row[3] || '0').replace(/[$,]/g, '')) || 0,
+                            impressions: parseInt(row[4]) || 0,
+                            clicks: parseInt(row[5]) || 0,
+                            ctr: parseFloat((row[6] || '0').replace('%', '')) || 0,
+                            performance: (row[7] || 'Unknown').trim()
+                        };
+                    })
+                    .filter(campaign => {
+                        const isValid = campaign.name && campaign.name !== '' && campaign.name !== 'Total';
+                        console.log('Campaign valid?', isValid, campaign.name);
+                        return isValid;
+                    });
+                
+                console.log(`Final campaigns loaded: ${data.campaigns.length}`);
+                data.campaigns.forEach((campaign, i) => {
+                    console.log(`Campaign ${i}:`, campaign.name, '
+
+        async function loadAdGroups() {
+            const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/AdGroup_Performance!A:K?key=${API_KEY}`;
             const response = await fetch(url);
             
             if (!response.ok) {
@@ -622,24 +711,267 @@
                 throw new Error(result.error.message);
             }
             
-            if (result.values && result.values.length > 11) {
-                const rows = result.values.slice(11); // Skip header rows
-                data.campaigns = rows
-                    .map(row => ({
-                        name: (row[0] || '').trim(),
-                        spend: parseFloat((row[1] || '0').replace(/[$,]/g, '')) || 0,
-                        conversions: parseInt(row[2]) || 0,
-                        cpa: parseFloat((row[3] || '0').replace(/[$,]/g, '')) || 0,
-                        impressions: parseInt(row[4]) || 0,
-                        clicks: parseInt(row[5]) || 0,
-                        ctr: parseFloat((row[6] || '0').replace('%', '')) || 0,
-                        performance: (row[7] || 'Unknown').trim()
-                    }))
-                    .filter(campaign => campaign.name && campaign.name !== ''); // Filter out empty campaigns
+            if (result.values && result.values.length > 3) {
+                const rows = result.values.slice(3); // Skip header rows
+                data.adGroups = rows
+                    .map(row => {
+                        const spend = parseFloat((row[3] || '0').replace(/[$,]/g, '')) || 0;
+                        return {
+                            campaign: (row[0] || '').trim(),
+                            name: (row[1] || '').trim(),
+                            impressions: parseInt(row[2]) || 0,
+                            spend: spend,
+                            conversions: parseInt(row[4]) || 0,
+                            cpa: parseFloat((row[5] || '0').replace(/[$,]/g, '')) || 0,
+                            clicks: parseInt(row[6]) || 0,
+                            ctr: parseFloat((row[7] || '0').replace('%', '')) || 0,
+                            performance: (row[8] || 'Unknown').trim(),
+                            action: (row[9] || 'Monitor').trim(),
+                            quality: (row[10] || 'N/A').trim()
+                        };
+                    })
+                    .filter(adGroup => 
+                        adGroup.campaign && 
+                        adGroup.name && 
+                        adGroup.spend > 0 // Only include ad groups with spend
+                    );
                 
-                console.log(`Loaded ${data.campaigns.length} campaigns`);
+                console.log(`Loaded ${data.adGroups.length} ad groups with spend > 0`);
             } else {
-                console.warn('No campaign data found or insufficient rows');
+                console.warn('No ad group data found or insufficient rows');
+                data.adGroups = [];
+            }
+        }
+
+        function updateDisplay() {
+            updateMetrics();
+            updateCampaignTable();
+            updateAdGroupTable();
+            updatePredictions();
+            updateAnalysis();
+            updateWasteTable();
+        }
+
+        function updateMetrics() {
+            if (!data.campaigns.length) {
+                console.warn('No campaigns to calculate metrics');
+                return;
+            }
+            
+            const totalSpend = data.campaigns.reduce((sum, c) => sum + c.spend, 0);
+            const totalConversions = data.campaigns.reduce((sum, c) => sum + c.conversions, 0);
+            const totalImpressions = data.campaigns.reduce((sum, c) => sum + c.impressions, 0);
+            const totalClicks = data.campaigns.reduce((sum, c) => sum + c.clicks, 0);
+            const avgCPA = totalConversions > 0 ? totalSpend / totalConversions : 0;
+            const conversionRate = totalClicks > 0 ? (totalConversions / totalClicks) * 100 : 0;
+            
+            // Store for predictions
+            data.totalImpressions = totalImpressions;
+            data.totalClicks = totalClicks;
+            
+            document.getElementById('totalSpend').textContent = '$' + totalSpend.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            document.getElementById('totalConversions').textContent = totalConversions.toLocaleString();
+            document.getElementById('avgCPA').textContent = '$' + avgCPA.toFixed(2);
+            document.getElementById('conversionRate').textContent = conversionRate.toFixed(2) + '%';
+            
+            document.getElementById('summary').innerHTML = 
+                `Over the past 7 days: <strong>$${totalSpend.toLocaleString('en-US', {minimumFractionDigits: 2})}</strong> total spend driving <strong>${totalConversions.toLocaleString()}</strong> conversions at <strong>$${avgCPA.toFixed(2)}</strong> average CPA with a <strong>${conversionRate.toFixed(2)}%</strong> conversion rate. Yesterday: <strong>$0.00 spend</strong> with <strong>0 conversions</strong>.<br><small style="color: #16a34a;"><strong>✅ Live data from Google Sheets (Updated: ${data.loadTime.toLocaleTimeString()})</strong></small>`;
+        }
+
+        function updateCampaignTable() {
+            const tbody = document.getElementById('campaignTable');
+            
+            if (!data.campaigns.length) {
+                tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 20px;">No campaign data available</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = '';
+            data.campaigns.forEach(campaign => {
+                const row = tbody.insertRow();
+                const statusClass = campaign.cpa > 100 ? 'status-warning' : 'status-success';
+                row.innerHTML = `
+                    <td>${campaign.name}</td>
+                    <td>$${campaign.spend.toLocaleString('en-US', {minimumFractionDigits: 2})}</td>
+                    <td>${campaign.conversions.toLocaleString()}</td>
+                    <td>$${campaign.cpa.toFixed(2)}</td>
+                    <td>$0.00</td>
+                    <td>0</td>
+                    <td>$0.00</td>
+                    <td><span class="status-badge ${statusClass}">${campaign.performance}</span></td>
+                `;
+            });
+        }
+
+        function updateAdGroupTable() {
+            const tbody = document.getElementById('adGroupTable');
+            
+            if (!data.adGroups.length) {
+                tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 20px;">No ad group data with spend available</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = '';
+            data.adGroups.forEach(adGroup => {
+                const row = tbody.insertRow();
+                const statusClass = adGroup.cpa > 100 ? 'status-warning' : 'status-success';
+                row.innerHTML = `
+                    <td>${adGroup.campaign}</td>
+                    <td>${adGroup.name}</td>
+                    <td>${adGroup.spend.toLocaleString('en-US', {minimumFractionDigits: 2})}</td>
+                    <td>${adGroup.conversions.toLocaleString()}</td>
+                    <td>${adGroup.cpa.toFixed(2)}</td>
+                    <td>${adGroup.ctr.toFixed(1)}%</td>
+                    <td><span class="status-badge ${statusClass}">${adGroup.performance}</span></td>
+                    <td>${adGroup.action}</td>
+                `;
+            });
+        }
+
+        function updatePredictions() {
+            if (!data.campaigns.length) {
+                console.warn('No campaigns for predictions');
+                return;
+            }
+            
+            const totalSpend = data.campaigns.reduce((sum, c) => sum + c.spend, 0);
+            const totalConversions = data.campaigns.reduce((sum, c) => sum + c.conversions, 0);
+            const avgCPA = totalConversions > 0 ? totalSpend / totalConversions : 0;
+            
+            // Predict next 7 days based on current 7-day performance
+            // Assuming similar performance pattern continues
+            const predictedSpend = totalSpend; // Same spend pattern
+            const predictedLeads = Math.round(totalConversions * 1.1); // 10% improvement assumption
+            const predictedCPA = predictedLeads > 0 ? predictedSpend / predictedLeads : avgCPA;
+            
+            document.getElementById('predictedSpend').textContent = ' + predictedSpend.toLocaleString('en-US', {minimumFractionDigits: 2});
+            document.getElementById('predictedLeads').textContent = predictedLeads.toLocaleString();
+            document.getElementById('predictedCPA').textContent = ' + predictedCPA.toFixed(2);
+            
+            let trend = '';
+            let trendColor = '#166534';
+            
+            if (avgCPA < 50) {
+                trend = 'Performance is strong with low CPA. Consider increasing budget for more leads.';
+            } else if (avgCPA > 100) {
+                trend = 'High CPA detected. Focus on optimizing campaigns to reduce cost-per-lead.';
+                trendColor = '#dc2626';
+            } else {
+                trend = 'Performance is stable. Monitor for optimization opportunities.';
+            }
+            
+            const conversionRate = data.totalClicks > 0 ? (totalConversions / data.totalClicks) * 100 : 0;
+            const efficiency = conversionRate > 5 ? 'excellent' : conversionRate > 2 ? 'good' : 'needs improvement';
+            
+            document.getElementById('predictionNote').innerHTML = 
+                `<span style="color: ${trendColor}">${trend}</span> Current conversion rate: ${conversionRate.toFixed(2)}% (${efficiency}). Predictions assume current performance trends continue with potential 10% optimization gains.`;
+        }
+
+        function updateAnalysis() {
+            if (!data.campaigns.length) {
+                console.warn('No campaigns for analysis');
+                return;
+            }
+            
+            // Campaign analysis
+            const sortedCampaigns = [...data.campaigns].sort((a, b) => a.cpa - b.cpa);
+            const bestCampaign = sortedCampaigns[0];
+            const worstCampaign = sortedCampaigns[sortedCampaigns.length - 1];
+            const goodPerformers = data.campaigns.filter(c => c.cpa < 50 && c.conversions > 0);
+            
+            document.getElementById('bestPerformers').textContent = 
+                bestCampaign ? `${bestCampaign.name} (${bestCampaign.cpa.toFixed(2)} CPA)` : 'No data';
+            document.getElementById('needsAttention').textContent = 
+                worstCampaign ? `${worstCampaign.name} (${worstCampaign.cpa.toFixed(2)} CPA)` : 'No data';
+            document.getElementById('portfolioOverview').textContent = 
+                `${data.campaigns.length} total campaigns | ${goodPerformers.length} performing well (CPA < $50)`;
+            document.getElementById('topOpportunity').textContent = 
+                bestCampaign ? `Scale ${bestCampaign.name} - performing excellently` : 'Review campaign performance';
+            
+            // Ad group analysis
+            if (data.adGroups.length) {
+                const sortedAdGroups = [...data.adGroups].sort((a, b) => a.cpa - b.cpa);
+                const bestAdGroup = sortedAdGroups[0];
+                const worstAdGroup = sortedAdGroups[sortedAdGroups.length - 1];
+                const goodAdGroups = data.adGroups.filter(ag => ag.cpa < 50 && ag.conversions > 0);
+                
+                document.getElementById('adGroupBest').textContent = 
+                    bestAdGroup ? `${bestAdGroup.name} (${bestAdGroup.cpa.toFixed(2)} CPA)` : 'No data';
+                document.getElementById('adGroupNeeds').textContent = 
+                    worstAdGroup ? `${worstAdGroup.name} (${worstAdGroup.cpa.toFixed(2)} CPA)` : 'No data';
+                document.getElementById('adGroupOverview').textContent = 
+                    `${data.adGroups.length} ad groups with spend | ${goodAdGroups.length} performing well (CPA < $50)`;
+                document.getElementById('adGroupOpportunity').textContent = 
+                    bestAdGroup ? `Scale ${bestAdGroup.name} - ready for budget increase` : 'Review ad group performance';
+            } else {
+                // Handle case where no ad groups have spend
+                document.getElementById('adGroupBest').textContent = 'No ad groups with spend';
+                document.getElementById('adGroupNeeds').textContent = 'No ad groups with spend';
+                document.getElementById('adGroupOverview').textContent = 'No ad groups with spend data available';
+                document.getElementById('adGroupOpportunity').textContent = 'Enable ad groups with budget allocation';
+            }
+        }
+
+        function updateWasteTable() {
+            const tbody = document.getElementById('wasteTable');
+            
+            // Placeholder for waste analysis - would need additional data from sheets
+            tbody.innerHTML = `
+                <tr>
+                    <td>broad match terms</td>
+                    <td>$0.00</td>
+                    <td>Add negative keywords</td>
+                </tr>
+                <tr>
+                    <td>irrelevant searches</td>
+                    <td>$0.00</td>
+                    <td>Review search terms report</td>
+                </tr>
+            `;
+        }
+
+        function showSuccess(message) {
+            const successDiv = document.createElement('div');
+            successDiv.style.cssText = 'background: #d1fae5; color: #065f46; padding: 10px; text-align: center; border-radius: 8px; margin: 10px 0; border: 1px solid #10b981;';
+            successDiv.textContent = message;
+            document.querySelector('.container').insertBefore(successDiv, document.querySelector('.executive-summary'));
+            
+            // Auto-remove success message after 5 seconds
+            setTimeout(() => {
+                if (successDiv.parentNode) {
+                    successDiv.parentNode.removeChild(successDiv);
+                }
+            }, 5000);
+        }
+
+        function showError(message) {
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error';
+            errorDiv.innerHTML = message;
+            document.querySelector('.container').insertBefore(errorDiv, document.querySelector('.executive-summary'));
+            
+            // Auto-remove error after 15 seconds
+            setTimeout(() => {
+                if (errorDiv.parentNode) {
+                    errorDiv.parentNode.removeChild(errorDiv);
+                }
+            }, 15000);
+        }
+
+        // Load data when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded, starting data load...');
+            loadData();
+        });
+
+        // Auto-refresh every 5 minutes
+        setInterval(loadData, 5 * 60 * 1000);
+    </script>
+</body>
+</html> + campaign.spend, campaign.conversions + ' conv');
+                });
+            } else {
+                console.warn('No campaign values found in response');
                 data.campaigns = [];
             }
         }
