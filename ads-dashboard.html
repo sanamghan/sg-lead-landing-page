@@ -597,362 +597,350 @@
 
     <script>
         // Configuration
-        const SHEET_ID = '1YU8dpDXYzMip8dMRPSMJIwxoN63RsOc4kCQC3gwMMWY';
-        const API_KEY = 'AIzaSyAkot5fE5EkTfB_EMwneh_UkJ0180K97_A';
+const SHEET_ID = '1YU8dpDXYzMip8dMRPSMJIwxoN63RsOc4kCQC3gwMMWY';
+const API_KEY = 'AIzaSyAkot5fE5EkTfB_EMwneh_UkJ0180K97_A';
+
+// Global data storage
+let dashboardData = {
+    campaigns: [],
+    adGroups: [],
+    dailyTrends: [],
+    wasteAnalysis: []
+};
+
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Dashboard loaded successfully');
+    
+    // Test API connection immediately
+    testAPIConnection();
+    loadRealData();
+});
+
+async function testAPIConnection() {
+    try {
+        const testUrl = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Live_Summary!A1:B5?key=${API_KEY}`;
+        console.log('Testing API connection...');
+        console.log('Test URL:', testUrl);
         
-        // Global data storage
-        let dashboardData = {
-            campaigns: [],
-            adGroups: [],
-            dailyTrends: [],
-            wasteAnalysis: []
-        };
+        const response = await fetch(testUrl);
+        const data = await response.json();
         
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('Dashboard loaded successfully');
-            
-            // Test API connection immediately
-            testAPIConnection();
-            loadRealData();
-        });
+        console.log('API Response:', data);
         
-        async function testAPIConnection() {
-            try {
-                const testUrl = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Live_Summary!A1:B5?key=${API_KEY}`;
-                console.log('Testing API connection...');
-                console.log('Test URL:', testUrl);
-                
-                const response = await fetch(testUrl);
-                const data = await response.json();
-                
-                console.log('API Response:', data);
-                
-                if (data.error) {
-                    console.error('API Error:', data.error);
-                    document.body.insertAdjacentHTML('afterbegin', 
-                        `<div style="background: #fee; color: #c00; padding: 10px; text-align: center;">
-                            API Error: ${data.error.message}
-                        </div>`);
-                } else {
-                    console.log('✅ API connection successful!');
-                    document.body.insertAdjacentHTML('afterbegin', 
-                        `<div style="background: #efe; color: #060; padding: 10px; text-align: center;">
-                            ✅ Connected to Google Sheets! Loading real data...
-                        </div>`);
-                }
-            } catch (error) {
-                console.error('API Connection failed:', error);
-                document.body.insertAdjacentHTML('afterbegin', 
-                    `<div style="background: #fee; color: #c00; padding: 10px; text-align: center;">
-                        Connection failed: ${error.message}
-                    </div>`);
-            }
+        if (data.error) {
+            console.error('API Error:', data.error);
+            document.body.insertAdjacentHTML('afterbegin', 
+                `<div style="background: #fee; color: #c00; padding: 10px; text-align: center;">
+                    API Error: ${data.error.message}
+                </div>`);
+        } else {
+            console.log('✅ API connection successful!');
+            document.body.insertAdjacentHTML('afterbegin', 
+                `<div style="background: #efe; color: #060; padding: 10px; text-align: center;">
+                    ✅ Connected to Google Sheets! Loading real data...
+                </div>`);
+        }
+    } catch (error) {
+        console.error('API Connection failed:', error);
+        document.body.insertAdjacentHTML('afterbegin', 
+            `<div style="background: #fee; color: #c00; padding: 10px; text-align: center;">
+                Connection failed: ${error.message}
+            </div>`);
+    }
+}
+
+document.querySelector('.refresh-button').addEventListener('click', function() {
+    this.innerHTML = '🔄 Refreshing...';
+    loadRealData();
+    setTimeout(() => {
+        document.querySelector('.refresh-button').innerHTML = '🔄 Refresh Data';
+    }, 2000);
+});
+
+async function loadRealData() {
+    try {
+        console.log('Loading real data from Google Sheets...');
+        
+        // Load data from different sheets
+        await Promise.all([
+            loadCampaignData(),
+            loadAdGroupData(),
+            loadDailyTrends(),
+            loadWasteAnalysis()
+        ]);
+        
+        // Update the dashboard with real data
+        updateDashboard();
+        
+    } catch (error) {
+        console.error('Error loading data:', error);
+        console.log('Using demo data as fallback');
+    }
+}
+
+async function loadCampaignData() {
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Live_Summary!A:H?key=${API_KEY}`;
+    
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+        
+        if (data.values) {
+            // Parse campaign data (skip headers)
+            const campaignRows = data.values.slice(11); // Skip to campaign data
+            dashboardData.campaigns = campaignRows.map(row => ({
+                name: row[0] || '',
+                spend7Day: parseFloat(row[1]?.replace('$', '')) || 0,
+                conversions7Day: parseInt(row[2]) || 0,
+                cpa7Day: parseFloat(row[3]?.replace('$', '')) || 0,
+                spendYesterday: parseFloat(row[4]?.replace('$', '')) || 0,
+                conversionsYesterday: parseInt(row[5]) || 0,
+                cpaYesterday: parseFloat(row[6]?.replace('$', '')) || 0,
+                performance: row[7] || 'Unknown'
+            })).filter(campaign => campaign.name);
+        }
+    } catch (error) {
+        console.error('Error loading campaign data:', error);
+    }
+}
+
+async function loadAdGroupData() {
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/AdGroup_Performance!A:K?key=${API_KEY}`;
+    
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+        
+        if (data.values) {
+            // Parse ad group data (skip headers)
+            const adGroupRows = data.values.slice(3);
+            dashboardData.adGroups = adGroupRows.map(row => ({
+                campaignName: row[0] || '',
+                adGroupName: row[1] || '',
+                status: row[2] || '',
+                spend: parseFloat(row[3]?.replace('$', '')) || 0,
+                conversions: parseInt(row[4]) || 0,
+                cpa: parseFloat(row[5]?.replace('$', '')) || 0,
+                clicks: parseInt(row[6]) || 0,
+                ctr: parseFloat(row[7]?.replace('%', '')) || 0,
+                performance: row[8] || 'Unknown',
+                action: row[9] || 'Monitor'
+            })).filter(ag => ag.campaignName);
+        }
+    } catch (error) {
+        console.error('Error loading ad group data:', error);
+    }
+}
+
+async function loadDailyTrends() {
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Daily_Trends!A:F?key=${API_KEY}`;
+    
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+        
+        if (data.values) {
+            // Parse daily trends data (skip headers)
+            const dailyRows = data.values.slice(3);
+            dashboardData.dailyTrends = dailyRows.map(row => ({
+                date: row[0] || '',
+                dayName: row[1] || '',
+                spend: parseFloat(row[2]?.replace('$', '')) || 0,
+                conversions: parseInt(row[3]) || 0,
+                cpa: parseFloat(row[4]?.replace('$', '')) || 0,
+                performance: row[5] || 'Unknown'
+            })).filter(day => day.date);
+        }
+    } catch (error) {
+        console.error('Error loading daily trends:', error);
+    }
+}
+
+async function loadWasteAnalysis() {
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Waste_Analysis!A:F?key=${API_KEY}`;
+    
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+        
+        if (data.values) {
+            // Parse waste analysis data (skip headers)
+            const wasteRows = data.values.slice(3);
+            dashboardData.wasteAnalysis = wasteRows.map(row => ({
+                query: row[0] || '',
+                cost: parseFloat(row[1]?.replace('$', '')) || 0,
+                conversions: parseInt(row[2]) || 0,
+                cpa: parseFloat(row[3]?.replace('$', '')) || 0,
+                reason: row[4] || '',
+                action: row[5] || ''
+            })).filter(waste => waste.query);
+        }
+    } catch (error) {
+        console.error('Error loading waste analysis:', error);
+    }
+}
+
+function updateDashboard() {
+    updateCampaignTable();
+    updateAdGroupTable();
+    updateDailyTrends();
+    updateWasteAnalysis();
+    updateSummaryMetrics();
+}
+
+function updateCampaignTable() {
+    const tbody = document.getElementById('campaignTableBody');
+    if (!tbody || !dashboardData.campaigns.length) return;
+    
+    tbody.innerHTML = '';
+    
+    dashboardData.campaigns.forEach(campaign => {
+        const row = document.createElement('tr');
+        
+        const statusClass = campaign.performance === 'Excellent' ? 'status-success' : 
+                          (campaign.cpa7Day > 100 ? 'status-warning' : 'status-warning');
+        
+        row.innerHTML = `
+            <td>${campaign.name}</td>
+            <td>$${campaign.spend7Day.toFixed(2)}</td>
+            <td>${campaign.conversions7Day}</td>
+            <td>$${campaign.cpa7Day.toFixed(2)}</td>
+            <td>$${campaign.spendYesterday.toFixed(2)}</td>
+            <td>${campaign.conversionsYesterday}</td>
+            <td>$${campaign.cpaYesterday.toFixed(2)}</td>
+            <td><span class="status-badge ${statusClass}">${campaign.performance.toUpperCase()}</span></td>
+        `;
+        
+        tbody.appendChild(row);
+    });
+}
+
+function updateAdGroupTable() {
+    const tbody = document.getElementById('adGroupTableBody');
+    if (!tbody || !dashboardData.adGroups.length) return;
+    
+    tbody.innerHTML = '';
+    
+    dashboardData.adGroups.forEach(adGroup => {
+        const row = document.createElement('tr');
+        
+        const statusClass = adGroup.performance === 'Excellent' ? 'status-success' : 
+                          (adGroup.cpa > 100 ? 'status-warning' : 'status-success');
+        
+        row.innerHTML = `
+            <td>${adGroup.campaignName}</td>
+            <td>${adGroup.adGroupName}</td>
+            <td>$${adGroup.spend.toFixed(2)}</td>
+            <td>${adGroup.conversions}</td>
+            <td>$${adGroup.cpa.toFixed(2)}</td>
+            <td>${adGroup.ctr.toFixed(1)}%</td>
+            <td><span class="status-badge ${statusClass}">${adGroup.performance}</span></td>
+            <td>${adGroup.action}</td>
+        `;
+        
+        tbody.appendChild(row);
+    });
+}
+
+function updateDailyTrends() {
+    const gridContainer = document.getElementById('dailyTrendsGrid');
+    if (!gridContainer || !dashboardData.dailyTrends.length) return;
+    
+    gridContainer.innerHTML = '';
+    
+    dashboardData.dailyTrends.forEach(day => {
+        const performance = day.performance;
+        let bgColor, borderColor;
+        
+        switch(performance) {
+            case 'Excellent':
+                bgColor = '#f0fdf4';
+                borderColor = '#16a34a';
+                break;
+            case 'Good':
+                bgColor = '#f8fafc';
+                borderColor = '#64748b';
+                break;
+            case 'Fair':
+                bgColor = '#fef3c7';
+                borderColor = '#f59e0b';
+                break;
+            default:
+                bgColor = '#fef2f2';
+                borderColor = '#dc2626';
         }
         
-        document.querySelector('.refresh-button').addEventListener('click', function() {
-            this.innerHTML = '🔄 Refreshing...';
-            loadRealData();
-            setTimeout(() => {
-                document.querySelector('.refresh-button').innerHTML = '🔄 Refresh Data';
-            }, 2000);
-        });
+        const dayDiv = document.createElement('div');
+        dayDiv.style.cssText = `text-align: center; padding: 12px; background: ${bgColor}; border-radius: 8px; border-left: 4px solid ${borderColor};`;
         
-        async function loadRealData() {
-            try {
-                console.log('Loading real data from Google Sheets...');
-                
-                // Load data from different sheets
-                await Promise.all([
-                    loadCampaignData(),
-                    loadAdGroupData(),
-                    loadDailyTrends(),
-                    loadWasteAnalysis()
-                ]);
-                
-                // Update the dashboard with real data
-                updateDashboard();
-                
-            } catch (error) {
-                console.error('Error loading data:', error);
-                // Fallback to demo data if real data fails
-                console.log('Using demo data as fallback');
-            }
+        dayDiv.innerHTML = `
+            <div style="font-size: 1.2em; font-weight: bold; color: ${borderColor};">${day.dayName}</div>
+            <div style="color: ${borderColor}; font-size: 0.9em; margin: 4px 0;">${performance}</div>
+            <div style="font-size: 0.8em; color: #374151;">${day.conversions} conversions</div>
+            <div style="font-size: 0.8em; color: #374151;">$${day.cpa.toFixed(2)} CPA</div>
+        `;
+        
+        gridContainer.appendChild(dayDiv);
+    });
+}
+
+function updateWasteAnalysis() {
+    const sections = document.querySelectorAll('.section');
+    let wasteSection = null;
+    
+    sections.forEach(section => {
+        const header = section.querySelector('h2');
+        if (header && header.textContent.includes('🔍 Waste Analysis')) {
+            wasteSection = section;
         }
-        
-        async function loadCampaignData() {
-            const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Live_Summary!A:H?key=${API_KEY}`;
-            
-            try {
-                const response = await fetch(url);
-                const data = await response.json();
-                
-                if (data.values) {
-                    // Parse campaign data (skip headers)
-                    const campaignRows = data.values.slice(11); // Skip to campaign data
-                    dashboardData.campaigns = campaignRows.map(row => ({
-                        name: row[0] || '',
-                        spend7Day: parseFloat(row[1]?.replace('
-</body>
-</html>, '')) || 0,
-                        conversions7Day: parseInt(row[2]) || 0,
-                        cpa7Day: parseFloat(row[3]?.replace('
-</body>
-</html>, '')) || 0,
-                        spendYesterday: parseFloat(row[4]?.replace('
-</body>
-</html>, '')) || 0,
-                        conversionsYesterday: parseInt(row[5]) || 0,
-                        cpaYesterday: parseFloat(row[6]?.replace('
-</body>
-</html>, '')) || 0,
-                        performance: row[7] || 'Unknown'
-                    })).filter(campaign => campaign.name);
-                }
-            } catch (error) {
-                console.error('Error loading campaign data:', error);
-            }
+    });
+    
+    if (!wasteSection) return;
+    
+    const wasteTable = wasteSection.querySelector('.data-table tbody');
+    if (!wasteTable || !dashboardData.wasteAnalysis.length) {
+        if (wasteTable) {
+            wasteTable.innerHTML = '<tr><td colspan="3">No significant waste detected in last 7 days</td></tr>';
         }
-        
-        async function loadAdGroupData() {
-            const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/AdGroup_Performance!A:K?key=${API_KEY}`;
-            
-            try {
-                const response = await fetch(url);
-                const data = await response.json();
-                
-                if (data.values) {
-                    // Parse ad group data (skip headers)
-                    const adGroupRows = data.values.slice(3);
-                    dashboardData.adGroups = adGroupRows.map(row => ({
-                        campaignName: row[0] || '',
-                        adGroupName: row[1] || '',
-                        status: row[2] || '',
-                        spend: parseFloat(row[3]?.replace('
-</body>
-</html>, '')) || 0,
-                        conversions: parseInt(row[4]) || 0,
-                        cpa: parseFloat(row[5]?.replace('
-</body>
-</html>, '')) || 0,
-                        clicks: parseInt(row[6]) || 0,
-                        ctr: parseFloat(row[7]?.replace('%', '')) || 0,
-                        performance: row[8] || 'Unknown',
-                        action: row[9] || 'Monitor'
-                    })).filter(ag => ag.campaignName);
-                }
-            } catch (error) {
-                console.error('Error loading ad group data:', error);
-            }
-        }
-        
-        async function loadDailyTrends() {
-            const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Daily_Trends!A:F?key=${API_KEY}`;
-            
-            try {
-                const response = await fetch(url);
-                const data = await response.json();
-                
-                if (data.values) {
-                    // Parse daily trends data (skip headers)
-                    const dailyRows = data.values.slice(3);
-                    dashboardData.dailyTrends = dailyRows.map(row => ({
-                        date: row[0] || '',
-                        dayName: row[1] || '',
-                        spend: parseFloat(row[2]?.replace('
-</body>
-</html>, '')) || 0,
-                        conversions: parseInt(row[3]) || 0,
-                        cpa: parseFloat(row[4]?.replace('
-</body>
-</html>, '')) || 0,
-                        performance: row[5] || 'Unknown'
-                    })).filter(day => day.date);
-                }
-            } catch (error) {
-                console.error('Error loading daily trends:', error);
-            }
-        }
-        
-        async function loadWasteAnalysis() {
-            const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Waste_Analysis!A:F?key=${API_KEY}`;
-            
-            try {
-                const response = await fetch(url);
-                const data = await response.json();
-                
-                if (data.values) {
-                    // Parse waste analysis data (skip headers)
-                    const wasteRows = data.values.slice(3);
-                    dashboardData.wasteAnalysis = wasteRows.map(row => ({
-                        query: row[0] || '',
-                        cost: parseFloat(row[1]?.replace('
-</body>
-</html>, '')) || 0,
-                        conversions: parseInt(row[2]) || 0,
-                        cpa: parseFloat(row[3]?.replace('
-</body>
-</html>, '')) || 0,
-                        reason: row[4] || '',
-                        action: row[5] || ''
-                    })).filter(waste => waste.query);
-                }
-            } catch (error) {
-                console.error('Error loading waste analysis:', error);
-            }
-        }
-        
-        function updateDashboard() {
-            updateCampaignTable();
-            updateAdGroupTable();
-            updateDailyTrends();
-            updateWasteAnalysis();
-            updateSummaryMetrics();
-        }
-        
-        function updateCampaignTable() {
-            const tbody = document.getElementById('campaignTableBody');
-            if (!tbody || !dashboardData.campaigns.length) return;
-            
-            tbody.innerHTML = '';
-            
-            dashboardData.campaigns.forEach(campaign => {
-                const row = document.createElement('tr');
-                
-                const statusClass = campaign.performance === 'Excellent' ? 'status-success' : 
-                                  (campaign.cpa7Day > 100 ? 'status-warning' : 'status-warning');
-                
-                row.innerHTML = `
-                    <td>${campaign.name}</td>
-                    <td>${campaign.spend7Day.toFixed(2)}</td>
-                    <td>${campaign.conversions7Day}</td>
-                    <td>${campaign.cpa7Day.toFixed(2)}</td>
-                    <td>${campaign.spendYesterday.toFixed(2)}</td>
-                    <td>${campaign.conversionsYesterday}</td>
-                    <td>${campaign.cpaYesterday.toFixed(2)}</td>
-                    <td><span class="status-badge ${statusClass}">${campaign.performance.toUpperCase()}</span></td>
-                `;
-                
-                tbody.appendChild(row);
-            });
-        }
-        
-        function updateAdGroupTable() {
-            const tbody = document.getElementById('adGroupTableBody');
-            if (!tbody || !dashboardData.adGroups.length) return;
-            
-            tbody.innerHTML = '';
-            
-            dashboardData.adGroups.forEach(adGroup => {
-                const row = document.createElement('tr');
-                
-                const statusClass = adGroup.performance === 'Excellent' ? 'status-success' : 
-                                  (adGroup.cpa > 100 ? 'status-warning' : 'status-success');
-                
-                row.innerHTML = `
-                    <td>${adGroup.campaignName}</td>
-                    <td>${adGroup.adGroupName}</td>
-                    <td>${adGroup.spend.toFixed(2)}</td>
-                    <td>${adGroup.conversions}</td>
-                    <td>${adGroup.cpa.toFixed(2)}</td>
-                    <td>${adGroup.ctr.toFixed(1)}%</td>
-                    <td><span class="status-badge ${statusClass}">${adGroup.performance}</span></td>
-                    <td>${adGroup.action}</td>
-                `;
-                
-                tbody.appendChild(row);
-            });
-        }
-        
-        function updateDailyTrends() {
-            // Update the daily trends section with real data
-            const trendsContainer = document.querySelector('.section:has(h2:contains("📈 7-Day Performance Trends"))');
-            if (!trendsContainer || !dashboardData.dailyTrends.length) return;
-            
-            const gridContainer = trendsContainer.querySelector('div[style*="grid-template-columns"]');
-            if (!gridContainer) return;
-            
-            gridContainer.innerHTML = '';
-            
-            dashboardData.dailyTrends.forEach(day => {
-                const performance = day.performance;
-                let bgColor, borderColor;
-                
-                switch(performance) {
-                    case 'Excellent':
-                        bgColor = '#f0fdf4';
-                        borderColor = '#16a34a';
-                        break;
-                    case 'Good':
-                        bgColor = '#f8fafc';
-                        borderColor = '#64748b';
-                        break;
-                    case 'Fair':
-                        bgColor = '#fef3c7';
-                        borderColor = '#f59e0b';
-                        break;
-                    default:
-                        bgColor = '#fef2f2';
-                        borderColor = '#dc2626';
-                }
-                
-                const dayDiv = document.createElement('div');
-                dayDiv.style.cssText = `text-align: center; padding: 12px; background: ${bgColor}; border-radius: 8px; border-left: 4px solid ${borderColor};`;
-                
-                dayDiv.innerHTML = `
-                    <div style="font-size: 1.2em; font-weight: bold; color: ${borderColor};">${day.dayName}</div>
-                    <div style="color: ${borderColor}; font-size: 0.9em; margin: 4px 0;">${performance}</div>
-                    <div style="font-size: 0.8em; color: #374151;">${day.conversions} conversions</div>
-                    <div style="font-size: 0.8em; color: #374151;">${day.cpa.toFixed(2)} CPA</div>
-                `;
-                
-                gridContainer.appendChild(dayDiv);
-            });
-        }
-        
-        function updateWasteAnalysis() {
-            const wasteTable = document.querySelector('.section:has(h2:contains("🔍 Waste Analysis")) .data-table tbody');
-            if (!wasteTable || !dashboardData.wasteAnalysis.length) return;
-            
-            wasteTable.innerHTML = '';
-            
-            // Show top 3 waste terms
-            dashboardData.wasteAnalysis.slice(0, 3).forEach(waste => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>"${waste.query}"</td>
-                    <td>${waste.cost.toFixed(2)}</td>
-                    <td><span class="status-badge status-warning">${waste.action}</span></td>
-                `;
-                wasteTable.appendChild(row);
-            });
-        }
-        
-        function updateSummaryMetrics() {
-            if (!dashboardData.campaigns.length) return;
-            
-            // Calculate totals from real data
-            const totalSpend = dashboardData.campaigns.reduce((sum, c) => sum + c.spend7Day, 0);
-            const totalConversions = dashboardData.campaigns.reduce((sum, c) => sum + c.conversions7Day, 0);
-            const avgCPA = totalConversions > 0 ? totalSpend / totalConversions : 0;
-            
-            // Update the executive summary
-            const summaryText = document.querySelector('.executive-summary p');
-            if (summaryText) {
-                summaryText.innerHTML = `Over the past 7 days: <strong>${totalSpend.toFixed(2)} total spend</strong> driving <strong>${totalConversions} conversions</strong> at <strong>${avgCPA.toFixed(2)} average CPA</strong>. Yesterday: <strong>$0.00 spend</strong> with <strong>0 conversions</strong>.<br><small style="color: #16a34a;"><strong>✅ Live data from Google Sheet</strong></small>`;
-            }
-            
-            // Update metric cards
-            const metricCards = document.querySelectorAll('.metric-card');
-            if (metricCards.length >= 4) {
-                metricCards[0].querySelector('.metric-value').textContent = `${totalSpend.toFixed(2)}`;
-                metricCards[1].querySelector('.metric-value').textContent = totalConversions.toString();
-                metricCards[2].querySelector('.metric-value').textContent = `${avgCPA.toFixed(2)}`;
-                // Keep conversion rate as calculated value or update if you have impression data
-            }
-        }
-        
-        // Fallback: If Google Sheets API is not available, you can add a simple fetch to your published sheet
-        // For now, we'll keep the existing demo data as fallback
+        return;
+    }
+    
+    wasteTable.innerHTML = '';
+    
+    // Show top 3 waste terms
+    dashboardData.wasteAnalysis.slice(0, 3).forEach(waste => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>"${waste.query}"</td>
+            <td>$${waste.cost.toFixed(2)}</td>
+            <td><span class="status-badge status-warning">${waste.action}</span></td>
+        `;
+        wasteTable.appendChild(row);
+    });
+}
+
+function updateSummaryMetrics() {
+    if (!dashboardData.campaigns.length) return;
+    
+    // Calculate totals from real data
+    const totalSpend = dashboardData.campaigns.reduce((sum, c) => sum + c.spend7Day, 0);
+    const totalConversions = dashboardData.campaigns.reduce((sum, c) => sum + c.conversions7Day, 0);
+    const avgCPA = totalConversions > 0 ? totalSpend / totalConversions : 0;
+    
+    // Update the executive summary
+    const summaryText = document.querySelector('.executive-summary p');
+    if (summaryText) {
+        summaryText.innerHTML = `Over the past 7 days: <strong>$${totalSpend.toFixed(2)} total spend</strong> driving <strong>${totalConversions} conversions</strong> at <strong>$${avgCPA.toFixed(2)} average CPA</strong>. Yesterday: <strong>$0.00 spend</strong> with <strong>0 conversions</strong>.<br><small style="color: #16a34a;"><strong>✅ Live data from Google Sheet</strong></small>`;
+    }
+    
+    // Update metric cards
+    const metricCards = document.querySelectorAll('.metric-card');
+    if (metricCards.length >= 4) {
+        metricCards[0].querySelector('.metric-value').textContent = `$${totalSpend.toFixed(2)}`;
+        metricCards[1].querySelector('.metric-value').textContent = totalConversions.toString();
+        metricCards[2].querySelector('.metric-value').textContent = `$${avgCPA.toFixed(2)}`;
+    }
+}
     </script>
 </body>
 </html>
