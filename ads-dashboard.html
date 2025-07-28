@@ -57,7 +57,7 @@
             <div class="timestamp">📅 Friday, July 25, 2025, 4:30 PM</div>
         </div>
 
-        <button class="refresh-button" onclick="loadData()">🔄 Refresh Data</button>
+        <button class="refresh-button" onclick="refreshDashboard()">🔄 Refresh Data</button>
 
         <div class="executive-summary">
             <h2>🎯 7-Day Executive Summary</h2>
@@ -335,58 +335,134 @@
             console.log('🚀 Starting data load...');
             data.loadTime = new Date();
             
+            // Show loading message immediately
+            document.getElementById('summary').innerHTML = '🔄 Loading data from Google Sheets...';
+            
             try {
+                console.log('Testing API connection...');
+                
+                // Test basic API connectivity first
+                const testUrl = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}?key=${API_KEY}`;
+                const testResponse = await fetch(testUrl);
+                console.log('API test response:', testResponse.status);
+                
+                if (!testResponse.ok) {
+                    throw new Error(`API Error: ${testResponse.status} - Check API key and Sheet ID`);
+                }
+                
+                console.log('API connection successful, loading data...');
+                
                 await loadSummaryData();
+                console.log('Summary loaded:', data.summary);
+                
                 await loadAdGroupData();
+                console.log('Ad groups loaded:', data.adGroups.length);
+                
                 await loadSearchTermsData();
+                console.log('Search terms loaded:', data.searchTerms.length);
+                
                 updateDisplay();
-                showMessage('✅ Data loaded successfully!');
+                console.log('✅ All data loaded successfully!');
+                
+                // Show success message
+                const successDiv = document.createElement('div');
+                successDiv.style.cssText = 'background: #d1fae5; color: #065f46; padding: 10px; border-radius: 8px; margin: 10px 0; text-align: center;';
+                successDiv.textContent = '✅ Data loaded successfully from Google Sheets!';
+                document.querySelector('.container').insertBefore(successDiv, document.querySelector('.metrics-grid'));
+                setTimeout(() => successDiv.remove(), 3000);
+                
             } catch (error) {
                 console.error('❌ Error loading data:', error);
-                showError('Failed to load data: ' + error.message);
+                
+                // Show detailed error
+                const errorDiv = document.createElement('div');
+                errorDiv.style.cssText = 'background: #fee; color: #dc2626; padding: 15px; border-radius: 8px; margin: 10px 0; border: 1px solid #dc2626;';
+                errorDiv.innerHTML = `
+                    <strong>❌ Data Loading Error:</strong><br>
+                    ${error.message}<br>
+                    <small>Check browser console (F12) for detailed logs</small>
+                `;
+                document.querySelector('.container').insertBefore(errorDiv, document.querySelector('.metrics-grid'));
+                
+                // Update summary with error info
+                document.getElementById('summary').innerHTML = 
+                    `<span style="color: #dc2626;">❌ Error: ${error.message}</span><br>
+                    <small>Sheet ID: ${SHEET_ID}<br>
+                    API Key: ${API_KEY.substring(0, 10)}...<br>
+                    Time: ${new Date().toLocaleString()}</small>`;
             }
         }
 
         async function loadSummaryData() {
-            console.log('📊 Loading summary data...');
+            console.log('📊 Loading summary data from Live_Summary...');
             const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Live_Summary!A:B?key=${API_KEY}`;
+            console.log('Summary URL:', url);
             
             const response = await fetch(url);
-            if (!response.ok) throw new Error(`Summary API error: ${response.status}`);
+            console.log('Summary response status:', response.status);
+            
+            if (!response.ok) {
+                throw new Error(`Summary sheet error: HTTP ${response.status}`);
+            }
             
             const result = await response.json();
-            if (result.error) throw new Error(result.error.message);
+            console.log('Summary result:', result);
+            
+            if (result.error) {
+                throw new Error(`Summary API error: ${result.error.message}`);
+            }
             
             if (result.values && result.values.length > 1) {
-                data.summary = {};
+                console.log('Processing summary data...');
+                data.summary = { spend: 0, conversions: 0, clicks: 0, impressions: 0 };
                 
-                result.values.slice(1).forEach(row => {
+                // Process each row to find metrics
+                result.values.slice(1).forEach((row, index) => {
+                    console.log(`Row ${index + 2}:`, row);
                     if (row[0] && row[1]) {
                         const key = row[0].toLowerCase().trim();
                         const value = row[1];
                         
+                        console.log(`Processing: "${key}" = "${value}"`);
+                        
                         if (key.includes('spend') || key.includes('cost')) {
                             data.summary.spend = parseFloat(value.replace(/[$,]/g, '')) || 0;
+                            console.log('Found spend:', data.summary.spend);
                         } else if (key.includes('conversion')) {
-                            data.summary.conversions = parseInt(value) || 0;
+                            data.summary.conversions = parseInt(value.replace(/,/g, '')) || 0;
+                            console.log('Found conversions:', data.summary.conversions);
                         } else if (key.includes('click')) {
                             data.summary.clicks = parseInt(value.replace(/,/g, '')) || 0;
+                            console.log('Found clicks:', data.summary.clicks);
                         } else if (key.includes('impression')) {
                             data.summary.impressions = parseInt(value.replace(/,/g, '')) || 0;
+                            console.log('Found impressions:', data.summary.impressions);
                         }
                     }
                 });
                 
-                // Create a summary campaign for the table
+                // Create summary campaign for table display
                 data.campaigns = [{
                     name: "7-Day Performance Summary",
-                    spend: data.summary.spend || 0,
-                    conversions: data.summary.conversions || 0,
+                    spend: data.summary.spend,
+                    conversions: data.summary.conversions,
                     cpa: (data.summary.conversions > 0) ? (data.summary.spend / data.summary.conversions) : 0,
                     performance: (data.summary.spend > 0) ? "Active" : "Inactive"
                 }];
                 
-                console.log('✅ Summary data loaded:', data.summary);
+                console.log('Final summary data:', data.summary);
+                console.log('Campaign created:', data.campaigns[0]);
+            } else {
+                console.warn('No summary data found in response');
+                // Set default values
+                data.summary = { spend: 0, conversions: 0, clicks: 0, impressions: 0 };
+                data.campaigns = [{
+                    name: "No Data Available",
+                    spend: 0,
+                    conversions: 0,
+                    cpa: 0,
+                    performance: "No Data"
+                }];
             }
         }
 
@@ -696,11 +772,34 @@
             }, 10000);
         }
 
-        // Load data on page load
-        document.addEventListener('DOMContentLoaded', loadData);
+        // Load data on page load with error handling
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🎯 Page loaded, starting data load in 1 second...');
+            
+            // Add immediate visual feedback
+            document.getElementById('summary').innerHTML = '🚀 Initializing dashboard...';
+            
+            // Start loading after a brief delay to ensure page is fully rendered
+            setTimeout(() => {
+                loadData().catch(error => {
+                    console.error('Failed to load data on page load:', error);
+                    document.getElementById('summary').innerHTML = 
+                        `❌ Failed to load data: ${error.message}<br><small>Check console for details</small>`;
+                });
+            }, 1000);
+        });
+
+        // Manual refresh function
+        window.refreshDashboard = function() {
+            console.log('🔄 Manual refresh triggered...');
+            loadData();
+        };
 
         // Auto-refresh every 5 minutes
-        setInterval(loadData, 5 * 60 * 1000);
+        setInterval(() => {
+            console.log('⏰ Auto-refresh triggered...');
+            loadData();
+        }, 5 * 60 * 1000);
     </script>
 </body>
 </html>
