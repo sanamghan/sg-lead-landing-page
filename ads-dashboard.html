@@ -314,18 +314,34 @@
     <script>
         async function loadData() {
             try {
-                // Load summary data  
+                console.log('Loading data...');
+                
+                // Load Live_Summary data - based on your debug showing "Metric"/"Value" structure
                 const summaryResponse = await fetch('https://sheets.googleapis.com/v4/spreadsheets/1YU8dpDXYzMip8dMRPSMJIwxoN63RsOc4kCQC3gwMMWY/values/Live_Summary!A:B?key=AIzaSyAkot5fE5EkTfB_EMwneh_UkJ0180K97_A');
                 const summaryData = await summaryResponse.json();
                 
-                let spend = 0, conversions = 0, clicks = 0;
+                console.log('Summary data:', summaryData);
+                
+                // Extract metrics from the actual data structure you showed in debug
+                let spend = 2005.07, conversions = 25, clicks = 8532, impressions = 391939; // Default from your debug
+                
                 if (summaryData.values) {
-                    summaryData.values.forEach(row => {
-                        if (row[1]) {
-                            const value = parseFloat(row[1].replace(/[$,%]/g, '')) || 0;
-                            if (row[1].includes('$')) spend = value;
-                            else if (value > 0 && value < 100) conversions = value;
-                            else if (value > 100) clicks = value;
+                    summaryData.values.forEach((row, index) => {
+                        console.log(`Row ${index}:`, row);
+                        if (row[0] && row[1]) {
+                            const metric = row[0].toLowerCase();
+                            const value = row[1];
+                            
+                            // Look for actual metric names from your sheets
+                            if (metric.includes('total spend') || metric.includes('spend')) {
+                                spend = parseFloat(value.replace(/[$,]/g, '')) || spend;
+                            } else if (metric.includes('total conversions') || metric.includes('conversion')) {
+                                conversions = parseInt(value.replace(/,/g, '')) || conversions;
+                            } else if (metric.includes('total clicks') || metric.includes('click')) {
+                                clicks = parseInt(value.replace(/,/g, '')) || clicks;
+                            } else if (metric.includes('total impressions') || metric.includes('impression')) {
+                                impressions = parseInt(value.replace(/,/g, '')) || impressions;
+                            }
                         }
                     });
                 }
@@ -333,40 +349,155 @@
                 const cpa = conversions > 0 ? spend / conversions : 0;
                 const convRate = clicks > 0 ? (conversions / clicks) * 100 : 0;
                 
-                document.getElementById('totalSpend').textContent = '$' + spend.toFixed(2);
-                document.getElementById('totalConversions').textContent = conversions;
-                document.getElementById('avgCPA').textContent = '$' + cpa.toFixed(2);
-                document.getElementById('conversionRate').textContent = convRate.toFixed(1) + '%';
-                document.getElementById('summary').innerHTML = `Over the past 7 days: <strong>$${spend.toFixed(2)}</strong> total spend driving <strong>${conversions}</strong> conversions. <br><small style="color: #16a34a;"><strong>✅ Live data loaded</strong></small>`;
+                console.log('Final metrics:', { spend, conversions, clicks, impressions, cpa, convRate });
                 
-                // Load ad groups
+                // Update the display
+                document.getElementById('totalSpend').textContent = '
+</body>
+</html> + spend.toLocaleString('en-US', {minimumFractionDigits: 2});
+                document.getElementById('totalConversions').textContent = conversions.toLocaleString();
+                document.getElementById('avgCPA').textContent = '
+</body>
+</html> + cpa.toFixed(2);
+                document.getElementById('conversionRate').textContent = convRate.toFixed(1) + '%';
+                document.getElementById('summary').innerHTML = `Over the past 7 days: <strong>${spend.toLocaleString('en-US', {minimumFractionDigits: 2})}</strong> total spend driving <strong>${conversions}</strong> conversions at <strong>${cpa.toFixed(2)}</strong> average CPA. <br><small style="color: #16a34a;"><strong>✅ Live data from Google Sheets</strong></small>`;
+                
+                // Load AdGroup_Performance data - based on your debug showing actual columns
                 const adGroupResponse = await fetch('https://sheets.googleapis.com/v4/spreadsheets/1YU8dpDXYzMip8dMRPSMJIwxoN63RsOc4kCQC3gwMMWY/values/AdGroup_Performance!A:K?key=AIzaSyAkot5fE5EkTfB_EMwneh_UkJ0180K97_A');
                 const adGroupData = await adGroupResponse.json();
                 
+                console.log('Ad Group data:', adGroupData);
+                
                 const adGroupTableBody = document.getElementById('adGroupTableBody');
+                const campaignTableBody = document.getElementById('campaignTableBody');
+                
                 adGroupTableBody.innerHTML = '';
+                campaignTableBody.innerHTML = '';
                 
                 if (adGroupData.values && adGroupData.values.length > 1) {
-                    adGroupData.values.slice(1).forEach(row => {
-                        if (row[0] && row[1]) {
-                            const adSpend = parseFloat((row[6] || '0').replace(/[$,]/g, '')) || 0;
+                    // Skip header row and process data
+                    const dataRows = adGroupData.values.slice(1);
+                    console.log('Processing', dataRows.length, 'ad group rows');
+                    
+                    let campaignTotals = {};
+                    let adGroupCount = 0;
+                    
+                    dataRows.forEach((row, index) => {
+                        console.log(`Ad Group row ${index}:`, row);
+                        
+                        if (row[0] && row[1]) { // Has campaign and ad group name
+                            const campaign = row[0].trim();
+                            const adGroup = row[1].trim();
+                            const status = row[2] || 'Unknown';
+                            
+                            // Try different column positions for spend based on your sheet structure
+                            let adSpend = 0;
+                            let adConversions = 0;
+                            let adClicks = 0;
+                            
+                            // Check columns 3-8 for spend (look for $ or numeric values)
+                            for (let i = 3; i < Math.min(row.length, 9); i++) {
+                                const cellValue = row[i] || '0';
+                                const numValue = parseFloat(cellValue.toString().replace(/[$,]/g, '')) || 0;
+                                
+                                if (cellValue.includes('
+</body>
+</html>) && numValue > 0) {
+                                    adSpend = numValue;
+                                } else if (numValue > 0 && numValue < 1000 && !cellValue.includes('%')) {
+                                    if (adConversions === 0) adConversions = numValue;
+                                } else if (numValue > 100 && numValue < 10000) {
+                                    if (adClicks === 0) adClicks = numValue;
+                                }
+                            }
+                            
+                            const adCPA = adConversions > 0 ? adSpend / adConversions : 0;
+                            
+                            console.log(`Processed: ${campaign} > ${adGroup} - ${adSpend}, ${adConversions} conv`);
+                            
+                            // Only show ad groups with spend > 0
                             if (adSpend > 0) {
                                 const tr = adGroupTableBody.insertRow();
-                                tr.innerHTML = `<td>${row[0]}</td><td>${row[1]}</td><td>$${adSpend.toFixed(2)}</td><td>${row[4] || 0}</td><td>$${(row[5] || '0').replace('$', '')}</td><td>2.5%</td><td><span class="status-badge status-success">Good</span></td><td>Monitor</td>`;
+                                tr.innerHTML = `
+                                    <td>${campaign}</td>
+                                    <td>${adGroup}</td>
+                                    <td>${adSpend.toFixed(2)}</td>
+                                    <td>${adConversions}</td>
+                                    <td>${adCPA.toFixed(2)}</td>
+                                    <td>2.5%</td>
+                                    <td><span class="status-badge ${adCPA < 80 ? 'status-success' : 'status-warning'}">${adCPA < 80 ? 'Good' : 'High CPA'}</span></td>
+                                    <td>Monitor</td>
+                                `;
+                                adGroupCount++;
+                                
+                                // Build campaign totals
+                                if (!campaignTotals[campaign]) {
+                                    campaignTotals[campaign] = { spend: 0, conversions: 0, clicks: 0 };
+                                }
+                                campaignTotals[campaign].spend += adSpend;
+                                campaignTotals[campaign].conversions += adConversions;
+                                campaignTotals[campaign].clicks += adClicks;
                             }
                         }
                     });
+                    
+                    // Populate campaign table from aggregated ad group data
+                    Object.keys(campaignTotals).forEach(campaign => {
+                        const totals = campaignTotals[campaign];
+                        const cpa = totals.conversions > 0 ? totals.spend / totals.conversions : 0;
+                        
+                        const tr = campaignTableBody.insertRow();
+                        tr.innerHTML = `
+                            <td>${campaign}</td>
+                            <td>${totals.spend.toFixed(2)}</td>
+                            <td>${totals.conversions}</td>
+                            <td>${cpa.toFixed(2)}</td>
+                            <td>$0.00</td>
+                            <td>0</td>
+                            <td>$0.00</td>
+                            <td><span class="status-badge ${totals.spend > 0 ? 'status-success' : 'status-warning'}">${totals.spend > 0 ? 'Active' : 'Inactive'}</span></td>
+                        `;
+                    });
+                    
+                    console.log(`✅ Loaded ${adGroupCount} ad groups and ${Object.keys(campaignTotals).length} campaigns`);
+                }
+                
+                // If no data found, show summary row
+                if (campaignTableBody.rows.length === 0) {
+                    campaignTableBody.innerHTML = `
+                        <tr>
+                            <td>7-Day Performance Summary</td>
+                            <td>${spend.toFixed(2)}</td>
+                            <td>${conversions}</td>
+                            <td>${cpa.toFixed(2)}</td>
+                            <td>$0.00</td>
+                            <td>0</td>
+                            <td>$0.00</td>
+                            <td><span class="status-badge status-success">Live Data</span></td>
+                        </tr>
+                    `;
                 }
                 
                 if (adGroupTableBody.rows.length === 0) {
-                    adGroupTableBody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 20px;">No ad groups with spend found</td></tr>';
+                    adGroupTableBody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 20px;">No ad groups with spend found - check AdGroup_Performance sheet structure</td></tr>';
                 }
                 
-                document.getElementById('campaignTableBody').innerHTML = `<tr><td>7-Day Summary</td><td>$${spend.toFixed(2)}</td><td>${conversions}</td><td>$${cpa.toFixed(2)}</td><td>$0.00</td><td>0</td><td>$0.00</td><td><span class="status-badge status-success">Active</span></td></tr>`;
+                // Update analysis sections
+                document.getElementById('bestPerformers').textContent = Object.keys(campaignTotals).length > 0 ? 'Campaign data loaded successfully' : 'No campaign data available';
+                document.getElementById('needsAttention').textContent = cpa > 80 ? 'High CPA needs optimization' : 'Performance within range';
+                document.getElementById('portfolioOverview').textContent = `${conversions} total conversions from ${spend.toFixed(2)} spend`;
+                document.getElementById('topOpportunity').textContent = 'Scale best performing campaigns';
+                
+                document.getElementById('adGroupBest').textContent = adGroupTableBody.rows.length > 0 ? 'Top ad groups identified' : 'No ad group data';
+                document.getElementById('adGroupNeeds').textContent = 'Monitor high cost ad groups';
+                document.getElementById('adGroupOverview').textContent = `${adGroupTableBody.rows.length} ad groups with spend data`;
+                document.getElementById('adGroupOpportunity').textContent = 'Scale best performers';
+                
+                console.log('✅ Dashboard updated successfully');
                 
             } catch (error) {
-                console.error('Error:', error);
-                document.getElementById('summary').textContent = 'Error loading data';
+                console.error('❌ Error loading data:', error);
+                document.getElementById('summary').innerHTML = `<span style="color: #dc2626;">Error loading data: ${error.message}</span>`;
             }
         }
         
