@@ -342,15 +342,16 @@
                 // Load Search Terms for waste analysis
                 await loadSearchTerms();
                 
-                // Update all displays
+                // Update all displays immediately after loading
                 updateMetrics();
                 updateCampaigns();
                 updateAdGroups();
                 updateTrends();
                 updateWaste();
                 updateAnalysis();
+                updatePredictions();
                 
-                console.log('✅ All data loaded successfully!');
+                console.log('✅ All data loaded and displayed successfully!');
                 
             } catch (error) {
                 console.error('❌ Error loading data:', error);
@@ -630,6 +631,74 @@
             document.getElementById('predictedSpend').textContent = ' + predictedSpend.toLocaleString('en-US', {minimumFractionDigits: 2});
             document.getElementById('predictedLeads').textContent = predictedLeads.toString();
             document.getElementById('predictedCPA').textContent = ' + predictedCPA.toFixed(2);
+            
+            let trend = '';
+            if (cpa < 50) {
+                trend = 'Performance is strong with low CPA. Consider increasing budget for more leads.';
+            } else if (cpa > 100) {
+                trend = 'High CPA detected. Focus on optimizing campaigns to reduce cost-per-lead.';
+            } else {
+                trend = 'Performance is stable. Monitor for optimization opportunities.';
+            }
+            
+        function updatePredictions() {
+            const { spend, conversions } = data.summary;
+            const cpa = conversions > 0 ? spend / conversions : 0;
+            
+            // Predict next 7 days with potential improvements
+            const predictedSpend = spend * 1.05; // 5% increase
+            const predictedLeads = Math.round(conversions * 1.1); // 10% improvement
+            const predictedCPA = predictedLeads > 0 ? predictedSpend / predictedLeads : cpa;
+            
+            document.getElementById('predictedSpend').textContent = '
+
+        function showError(message) {
+            const div = document.createElement('div');
+            div.className = 'error';
+            div.textContent = message;
+            document.querySelector('.container').insertBefore(div, document.querySelector('.executive-summary'));
+            
+            setTimeout(() => {
+                if (div.parentNode) div.parentNode.removeChild(div);
+            }, 10000);
+        }
+
+        // Load data when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('📱 Dashboard loaded, starting data load...');
+            loadAllData();
+        });
+
+        // Auto-refresh every 5 minutes
+        setInterval(loadAllData, 5 * 60 * 1000);
+    </script>
+</body>
+</html> + predictedSpend.toLocaleString('en-US', {minimumFractionDigits: 2});
+            document.getElementById('predictedLeads').textContent = predictedLeads.toString();
+            document.getElementById('predictedCPA').textContent = '
+
+        function showError(message) {
+            const div = document.createElement('div');
+            div.className = 'error';
+            div.textContent = message;
+            document.querySelector('.container').insertBefore(div, document.querySelector('.executive-summary'));
+            
+            setTimeout(() => {
+                if (div.parentNode) div.parentNode.removeChild(div);
+            }, 10000);
+        }
+
+        // Load data when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('📱 Dashboard loaded, starting data load...');
+            loadAllData();
+        });
+
+        // Auto-refresh every 5 minutes
+        setInterval(loadAllData, 5 * 60 * 1000);
+    </script>
+</body>
+</html> + predictedCPA.toFixed(2);
             
             let trend = '';
             if (cpa < 50) {
