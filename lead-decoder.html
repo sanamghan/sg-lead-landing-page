@@ -126,6 +126,7 @@
                 <li><strong>Click "Copy All"</strong> to copy the decoded campaign information</li>
                 <li><strong>When converting the lead to a contact in Clio</strong>, paste the information into these custom fields:
                     <ul style="margin-top: 10px;">
+                        <li><strong>Google Click ID (GCLID)</strong> (unique identifier for the ad click)</li>
                         <li><strong>Campaign Type</strong> (General Search Campaign or Category Search Campaign)</li>
                         <li><strong>Campaign ID</strong> (the number from the URL)</li>
                         <li><strong>Keyword</strong> (shows which search term triggered the ad)</li>
@@ -154,6 +155,15 @@
                 const params = new URLSearchParams(url.search);
                 
                 let decodedInfo = [];
+                
+                // GCLID (Google Click ID)
+                const gclid = params.get('gclid');
+                if (gclid) {
+                    decodedInfo.push({
+                        label: 'Google Click ID (GCLID)',
+                        value: gclid
+                    });
+                }
                 
                 // Campaign Type
                 const campaignId = params.get('campaign') || params.get('gad_campaignid');
