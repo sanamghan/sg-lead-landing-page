@@ -115,6 +115,7 @@
             <h3>📝 Quick Reference:</h3>
             <p><strong>Campaign ID 22813799895</strong> = General Search Campaign</p>
             <p><strong>Campaign ID 22813981578</strong> = Category Search Campaign</p>
+            <p><strong>Campaign ID 22910828125</strong> = Display Campaign</p>
         </div>
 
         <div style="margin-top: 30px; padding: 20px; background-color: #e3f2fd; border-radius: 5px; border-left: 4px solid #2196F3;">
@@ -127,10 +128,10 @@
                 <li><strong>When converting the lead to a contact in Clio</strong>, paste the information into these custom fields:
                     <ul style="margin-top: 10px;">
                         <li><strong>Google Click ID (GCLID)</strong> (unique identifier for the ad click)</li>
-                        <li><strong>Campaign Type</strong> (General Search Campaign or Category Search Campaign)</li>
+                        <li><strong>Campaign Type</strong> (General Search, Category Search, or Display Campaign)</li>
                         <li><strong>Campaign ID</strong> (the number from the URL)</li>
-                        <li><strong>Keyword</strong> (shows which search term triggered the ad)</li>
-                        <li><strong>Match Type</strong> (exact, broad, phrase, etc.)</li>
+                        <li><strong>Keyword</strong> (shows which search term triggered the ad - Search campaigns only)</li>
+                        <li><strong>Match Type</strong> (exact, broad, phrase, etc. - Search campaigns only)</li>
                     </ul>
                 </li>
                 <li><strong>Save the contact</strong> with the campaign tracking information</li>
@@ -173,6 +174,8 @@
                         campaignType = 'General Search Campaign';
                     } else if (campaignId === '22813981578') {
                         campaignType = 'Category Search Campaign';
+                    } else if (campaignId === '22910828125') {
+                        campaignType = 'Display Campaign';
                     }
                     decodedInfo.push({
                         label: 'Campaign Type',
