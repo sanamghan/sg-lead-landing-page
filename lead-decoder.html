@@ -113,9 +113,16 @@
 
         <div class="reference">
             <h3>📝 Quick Reference:</h3>
-            <p><strong>Campaign ID 22813799895</strong> = General Search Campaign</p>
-            <p><strong>Campaign ID 22813981578</strong> = Category Search Campaign</p>
-            <p><strong>Campaign ID 22910828125</strong> = Display Campaign</p>
+            <p><strong>Google Ads Campaigns:</strong></p>
+            <ul style="margin-left: 20px;">
+                <li><strong>Campaign ID 22813799895</strong> = General Search Campaign</li>
+                <li><strong>Campaign ID 22813981578</strong> = Category Search Campaign</li>
+                <li><strong>Campaign ID 22910828125</strong> = Display Campaign</li>
+            </ul>
+            <p style="margin-top: 15px;"><strong>LinkedIn Ads:</strong></p>
+            <ul style="margin-left: 20px;">
+                <li>Automatically detected when utm_source=linkedin</li>
+            </ul>
         </div>
 
         <div style="margin-top: 30px; padding: 20px; background-color: #e3f2fd; border-radius: 5px; border-left: 4px solid #2196F3;">
@@ -127,11 +134,21 @@
                 <li><strong>Click "Copy All"</strong> to copy the decoded campaign information</li>
                 <li><strong>When converting the lead to a contact in Clio</strong>, paste the information into these custom fields:
                     <ul style="margin-top: 10px;">
-                        <li><strong>Google Click ID (GCLID)</strong> (unique identifier for the ad click)</li>
-                        <li><strong>Campaign Type</strong> (General Search, Category Search, or Display Campaign)</li>
-                        <li><strong>Campaign ID</strong> (the number from the URL)</li>
-                        <li><strong>Keyword</strong> (shows which search term triggered the ad - Search campaigns only)</li>
-                        <li><strong>Match Type</strong> (exact, broad, phrase, etc. - Search campaigns only)</li>
+                        <li><strong>For Google Ads:</strong></li>
+                        <ul style="margin-left: 20px;">
+                            <li><strong>Google Click ID (GCLID)</strong> - unique identifier for the ad click</li>
+                            <li><strong>Campaign Type</strong> - General Search, Category Search, or Display Campaign</li>
+                            <li><strong>Campaign ID</strong> - the number from the URL</li>
+                            <li><strong>Keyword</strong> - which search term triggered the ad (Search campaigns only)</li>
+                            <li><strong>Match Type</strong> - exact, broad, phrase, etc. (Search campaigns only)</li>
+                        </ul>
+                        <li style="margin-top: 10px;"><strong>For LinkedIn Ads:</strong></li>
+                        <ul style="margin-left: 20px;">
+                            <li><strong>Ad Platform</strong> - LinkedIn Ads</li>
+                            <li><strong>Campaign Name</strong> - the campaign name</li>
+                            <li><strong>LinkedIn Campaign ID</strong> - the campaign ID number</li>
+                            <li><strong>Creative ID</strong> - the specific ad creative that was shown</li>
+                        </ul>
                     </ul>
                 </li>
                 <li><strong>Save the contact</strong> with the campaign tracking information</li>
@@ -157,79 +174,110 @@
                 
                 let decodedInfo = [];
                 
-                // GCLID (Google Click ID)
-                const gclid = params.get('gclid');
-                if (gclid) {
-                    decodedInfo.push({
-                        label: 'Google Click ID (GCLID)',
-                        value: gclid
-                    });
-                }
+                // Detect if this is LinkedIn or Google Ads
+                const utmSource = params.get('utm_source');
+                const utmMedium = params.get('utm_medium');
+                const isLinkedIn = utmSource === 'linkedin' && utmMedium === 'paid_social';
                 
-                // Campaign Type
-                const campaignId = params.get('campaign') || params.get('gad_campaignid');
-                if (campaignId) {
-                    let campaignType = 'Unknown Campaign';
-                    if (campaignId === '22813799895') {
-                        campaignType = 'General Search Campaign';
-                    } else if (campaignId === '22813981578') {
-                        campaignType = 'Category Search Campaign';
-                    } else if (campaignId === '22910828125') {
-                        campaignType = 'Display Campaign';
+                if (isLinkedIn) {
+                    // LinkedIn Ads tracking
+                    decodedInfo.push({
+                        label: 'Ad Platform',
+                        value: 'LinkedIn Ads'
+                    });
+                    
+                    const campaignName = params.get('utm_campaign');
+                    if (campaignName) {
+                        decodedInfo.push({
+                            label: 'Campaign Name',
+                            value: decodeURIComponent(campaignName)
+                        });
                     }
-                    decodedInfo.push({
-                        label: 'Campaign Type',
-                        value: campaignType
-                    });
-                    decodedInfo.push({
-                        label: 'Campaign ID',
-                        value: campaignId
-                    });
-                }
-                
-                // Keyword (Search only)
-                const keyword = params.get('keyword') || params.get('utm_term');
-                if (keyword) {
-                    decodedInfo.push({
-                        label: 'Keyword',
-                        value: decodeURIComponent(keyword).replace(/\+/g, ' ')
-                    });
-                }
-                
-                // Match Type (Search only)
-                const matchType = params.get('matchtype');
-                if (matchType) {
-                    decodedInfo.push({
-                        label: 'Match Type',
-                        value: matchType
-                    });
-                }
-                
-                // Ad Group
-                const adGroup = params.get('adgroup');
-                if (adGroup) {
-                    decodedInfo.push({
-                        label: 'Ad Group ID',
-                        value: adGroup
-                    });
-                }
-                
-                // Source (Performance Max)
-                const source = params.get('source');
-                if (source === 'pmax') {
-                    decodedInfo.push({
-                        label: 'Source',
-                        value: 'Performance Max'
-                    });
-                }
-                
-                // Placement (Performance Max)
-                const placement = params.get('placement');
-                if (placement) {
-                    decodedInfo.push({
-                        label: 'Placement',
-                        value: placement
-                    });
+                    
+                    const campaignId = params.get('utm_term');
+                    if (campaignId) {
+                        decodedInfo.push({
+                            label: 'LinkedIn Campaign ID',
+                            value: campaignId
+                        });
+                    }
+                    
+                    const creativeId = params.get('utm_content');
+                    if (creativeId) {
+                        decodedInfo.push({
+                            label: 'Creative ID',
+                            value: creativeId
+                        });
+                    }
+                } else {
+                    // Google Ads tracking
+                    const gclid = params.get('gclid');
+                    if (gclid) {
+                        decodedInfo.push({
+                            label: 'Google Click ID (GCLID)',
+                            value: gclid
+                        });
+                    }
+                    
+                    const campaignId = params.get('campaign') || params.get('gad_campaignid');
+                    if (campaignId) {
+                        let campaignType = 'Unknown Campaign';
+                        if (campaignId === '22813799895') {
+                            campaignType = 'General Search Campaign';
+                        } else if (campaignId === '22813981578') {
+                            campaignType = 'Category Search Campaign';
+                        } else if (campaignId === '22910828125') {
+                            campaignType = 'Display Campaign';
+                        }
+                        decodedInfo.push({
+                            label: 'Campaign Type',
+                            value: campaignType
+                        });
+                        decodedInfo.push({
+                            label: 'Campaign ID',
+                            value: campaignId
+                        });
+                    }
+                    
+                    const keyword = params.get('keyword');
+                    if (keyword) {
+                        decodedInfo.push({
+                            label: 'Keyword',
+                            value: decodeURIComponent(keyword).replace(/\+/g, ' ')
+                        });
+                    }
+                    
+                    const matchType = params.get('matchtype');
+                    if (matchType) {
+                        decodedInfo.push({
+                            label: 'Match Type',
+                            value: matchType
+                        });
+                    }
+                    
+                    const adGroup = params.get('adgroup');
+                    if (adGroup) {
+                        decodedInfo.push({
+                            label: 'Ad Group ID',
+                            value: adGroup
+                        });
+                    }
+                    
+                    const source = params.get('source');
+                    if (source === 'pmax') {
+                        decodedInfo.push({
+                            label: 'Source',
+                            value: 'Performance Max'
+                        });
+                    }
+                    
+                    const placement = params.get('placement');
+                    if (placement) {
+                        decodedInfo.push({
+                            label: 'Placement',
+                            value: placement
+                        });
+                    }
                 }
                 
                 if (decodedInfo.length === 0) {
